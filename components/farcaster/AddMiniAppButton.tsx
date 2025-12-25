@@ -3,6 +3,7 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFarcasterActions } from "@/hooks/useFarcasterActions";
+import { useFarcasterContext } from "@/hooks/useFarcasterContext";
 
 interface AddMiniAppButtonProps {
   variant?: "default" | "icon";
@@ -11,10 +12,16 @@ interface AddMiniAppButtonProps {
 
 export function AddMiniAppButton({ variant = "default", className }: AddMiniAppButtonProps) {
   const { addMiniApp } = useFarcasterActions();
+  const { isInMiniApp, isLoading, client } = useFarcasterContext();
 
   const handleAdd = async () => {
     await addMiniApp();
   };
+
+  // Hide button if not in Mini App, still loading, or already added
+  if (isLoading || !isInMiniApp || client?.added) {
+    return null;
+  }
 
   if (variant === "icon") {
     return (

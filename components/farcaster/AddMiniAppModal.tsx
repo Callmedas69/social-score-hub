@@ -11,14 +11,22 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useFarcasterActions } from "@/hooks/useFarcasterActions";
+import { useFarcasterContext } from "@/hooks/useFarcasterContext";
 
 const STORAGE_KEY = "add-miniapp-dismissed";
 
 export function AddMiniAppModal() {
   const [open, setOpen] = useState(false);
   const { addMiniApp } = useFarcasterActions();
+  const { isInMiniApp, isLoading, client } = useFarcasterContext();
 
   useEffect(() => {
+    // Don't show if still loading context
+    if (isLoading) return;
+
+    // Don't show if not in Mini App or already added
+    if (!isInMiniApp || client?.added) return;
+
     // Check if user has dismissed the modal before
     const dismissed = localStorage.getItem(STORAGE_KEY);
     if (!dismissed) {
@@ -26,7 +34,7 @@ export function AddMiniAppModal() {
       const timer = setTimeout(() => setOpen(true), 1000);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isLoading, isInMiniApp, client?.added]);
 
   const handleAdd = async () => {
     const success = await addMiniApp();
