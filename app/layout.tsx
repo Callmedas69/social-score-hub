@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { AppProviders } from "@/components/providers/AppProviders";
+import { APP_NAME, DOMAIN_URL } from "@/config/constants";
 import "./globals.css";
 
 const baseSans = localFont({
@@ -15,33 +16,30 @@ const dotoBold = localFont({
   display: "swap",
 });
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME || "HELLO ONCHAIN";
-const domainUrl = process.env.NEXT_PUBLIC_DOMAIN_URL || "http://localhost:3000";
-
 // Farcaster Mini App embed configuration
 const miniAppEmbed = {
   version: "1",
-  imageUrl: `${domainUrl}/og.png`,
+  imageUrl: `${DOMAIN_URL}/og.png`,
   button: {
     title: "Your Signals",
     action: {
       type: "launch_frame",
-      name: appName,
-      url: domainUrl,
-      splashImageUrl: `${domainUrl}/splash.png`,
+      name: APP_NAME,
+      url: DOMAIN_URL,
+      splashImageUrl: `${DOMAIN_URL}/splash.png`,
       splashBackgroundColor: "#FFFFFF",
     },
   },
 };
 
 export const metadata: Metadata = {
-  title: `${appName} | Not A Score, Just The Signals`,
+  title: `${APP_NAME} | Not A Score, Just The Signals`,
   description: "Not a score, just the signals ; your Web3 reputation at a glance.",
   appleWebApp: {
     title: "Score Hub",
   },
   openGraph: {
-    title: appName,
+    title: APP_NAME,
     description: "Not a score, just the signals ; your Web3 reputation at a glance.",
   },
   other: {

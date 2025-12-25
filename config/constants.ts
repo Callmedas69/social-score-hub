@@ -28,9 +28,9 @@ export const CHAIN_CONFIG: Record<SupportedChainId, {
 export const SUPPORTED_CHAIN = base;
 export const CONTRACT_ADDRESS = HELLOONCHAIN_ADDRESS;
 export const CONTRACT_ABI = HELLOONCHAIN_ABI;
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "HELLO ONCHAIN";
+export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "SOCIAL SCORE HUB";
 export const APP_DESCRIPTION = "Daily check-in for rewards";
-export const DOMAIN_URL = process.env.NEXT_PUBLIC_DOMAIN_URL || "http://localhost:3000";
+export const DOMAIN_URL = process.env.NEXT_PUBLIC_DOMAIN_URL || "https://socialhub.geoart.studio/";
 
 // SSA ProfileSBT contract address
 export const SSA_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_SSA_INDEX as `0x${string}`;

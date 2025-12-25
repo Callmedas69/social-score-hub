@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import { readFileSync } from "fs";
 import path from "path";
+import { DOMAIN_URL } from "@/config/constants";
 
 // Load fonts from static directory
 function loadFonts(): { interTight: Buffer | null; doto: Buffer | null } {
@@ -25,21 +26,19 @@ const PROVIDERS = [
 ];
 
 async function fetchScores(address: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_URL || "http://localhost:3000";
-
   try {
     // Fetch all scores in parallel
     const [talentRes, neynarRes, gitcoinRes, ethosRes] = await Promise.all([
-      fetch(`${baseUrl}/api/scores/talent/${address}`).then((r) =>
+      fetch(`${DOMAIN_URL}/api/scores/talent/${address}`).then((r) =>
         r.ok ? r.json() : null
       ),
-      fetch(`${baseUrl}/api/scores/neynar/${address}`).then((r) =>
+      fetch(`${DOMAIN_URL}/api/scores/neynar/${address}`).then((r) =>
         r.ok ? r.json() : null
       ),
-      fetch(`${baseUrl}/api/scores/gitcoin/${address}`).then((r) =>
+      fetch(`${DOMAIN_URL}/api/scores/gitcoin/${address}`).then((r) =>
         r.ok ? r.json() : null
       ),
-      fetch(`${baseUrl}/api/scores/ethos/${address}`).then((r) =>
+      fetch(`${DOMAIN_URL}/api/scores/ethos/${address}`).then((r) =>
         r.ok ? r.json() : null
       ),
     ]);
@@ -47,7 +46,7 @@ async function fetchScores(address: string) {
     // Fetch Quotient if we have FID
     let quotientData = null;
     if (neynarRes?.fid) {
-      const quotientRes = await fetch(`${baseUrl}/api/scores/quotient`, {
+      const quotientRes = await fetch(`${DOMAIN_URL}/api/scores/quotient`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fids: [neynarRes.fid] }),
@@ -94,7 +93,6 @@ export async function GET(request: NextRequest) {
     return new Response("Invalid address", { status: 400 });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_URL || "http://localhost:3000";
   const fonts = loadFonts();
   const scores = await fetchScores(address);
 
@@ -119,7 +117,7 @@ export async function GET(request: NextRequest) {
           }}
         >
           <img
-            src={`${baseUrl}/social_score_hub_logo.svg`}
+            src={`${DOMAIN_URL}/social_score_hub_logo.svg`}
             width={44}
             height={44}
             style={{ marginRight: "7px" }}
@@ -149,7 +147,7 @@ export async function GET(request: NextRequest) {
             {PROVIDERS.slice(0, 3).map((provider) => {
               const value = scores?.[provider.key as keyof typeof scores] ?? null;
               const displayValue = formatScore(value as number | null, provider.max, provider.key);
-              const logoUrl = `${baseUrl}${provider.logo}`;
+              const logoUrl = `${DOMAIN_URL}${provider.logo}`;
               return (
                 <div
                   key={provider.key}
@@ -179,7 +177,7 @@ export async function GET(request: NextRequest) {
             {PROVIDERS.slice(3, 6).map((provider) => {
               const value = scores?.[provider.key as keyof typeof scores] ?? null;
               const displayValue = formatScore(value as number | null, provider.max, provider.key);
-              const logoUrl = `${baseUrl}${provider.logo}`;
+              const logoUrl = `${DOMAIN_URL}${provider.logo}`;
               return (
                 <div
                   key={provider.key}
@@ -245,7 +243,7 @@ export async function GET(request: NextRequest) {
             {shortenAddress(address)}
           </span>
           <img
-            src={`${baseUrl}/chains/Base_lockup_2color.svg`}
+            src={`${DOMAIN_URL}/chains/Base_lockup_2color.svg`}
             height={18}
           />
         </div>

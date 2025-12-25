@@ -1,8 +1,7 @@
 import { Metadata } from "next";
+import { DOMAIN_URL } from "@/config/constants";
 
 export const dynamic = "force-dynamic";
-
-const baseUrl = process.env.NEXT_PUBLIC_DOMAIN_URL || "http://localhost:3000";
 
 export async function generateMetadata(props: {
   searchParams: Promise<{ address?: string }>;
@@ -16,7 +15,7 @@ export async function generateMetadata(props: {
 
   // If address provided, use dynamic OG image
   const ogImage = address
-    ? `${baseUrl}/api/og/score?address=${address}`
+    ? `${DOMAIN_URL}/api/og/score?address=${address}`
     : undefined;
 
   return {
