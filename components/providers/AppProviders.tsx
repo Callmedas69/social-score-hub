@@ -26,6 +26,8 @@ export function AppProviders({ children }: AppProvidersProps) {
   useEffect(() => {
     const initFarcaster = async () => {
       try {
+        // Signal app is ready - dismisses splash screen
+        await sdk.actions.ready();
         // Enable native back navigation for Next.js routing
         await sdk.back.enableWebNavigation();
       } catch (error) {
