@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <rect width="512" height="512" fill="#FFFFFF" />
+
+    <!-- Top -->
+    <circle cx="256" cy="120" r="48" fill="#0000FF" />
+
+    <!-- Upper Right -->
+    <circle cx="360" cy="200" r="48" fill="#0000FF" />
+
+    <!-- Lower Right -->
+    <circle cx="360" cy="320" r="48" fill="#0000FF" />
+
+    <!-- Bottom -->
+    <circle cx="256" cy="392" r="48" fill="#0000FF" />
+
+    <!-- Lower Left -->
+    <circle cx="152" cy="320" r="48" fill="#0000FF" />
+
+    <!-- Upper Left -->
+    <circle cx="152" cy="200" r="48" fill="#0000FF" />
+</svg>

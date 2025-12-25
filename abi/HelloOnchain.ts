@@ -1,18 +1,27 @@
-export const CHECKIN_ADDRESS = "0xD6D76eE65319f72d398BB5EAbA042f70D88CD618" as const;
+export const HELLOONCHAIN_ADDRESS = "0xa238AdEfF7999B453bcAb969DAEbea23646Ccc02" as const;
 
-export const CHECKIN_ABI = [
+export const HELLOONCHAIN_ABI = [
   {
     type: "constructor",
     inputs: [
       { name: "initialOwner", type: "address" },
       { name: "defaultToken", type: "address" },
       { name: "defaultAmount", type: "uint256" },
+      { name: "_dailyClaimCap", type: "uint256" },
+      { name: "_cooldownPeriod", type: "uint256" },
     ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
-    name: "COOLDOWN",
+    name: "MAX_COOLDOWN",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "MIN_COOLDOWN",
     inputs: [],
     outputs: [{ name: "", type: "uint256" }],
     stateMutability: "view",
@@ -46,10 +55,38 @@ export const CHECKIN_ABI = [
   },
   {
     type: "function",
-    name: "checkIn",
+    name: "helloOnchain",
     inputs: [],
     outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "cooldownPeriod",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "currentDayStart",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "dailyClaimCap",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "dailyClaimCount",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -66,6 +103,24 @@ export const CHECKIN_ABI = [
         ],
       },
     ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getDailyClaimStats",
+    inputs: [],
+    outputs: [
+      { name: "cap", type: "uint256" },
+      { name: "claimed", type: "uint256" },
+      { name: "remaining", type: "uint256" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getRemainingDailyClaims",
+    inputs: [],
+    outputs: [{ name: "remaining", type: "uint256" }],
     stateMutability: "view",
   },
   {
@@ -93,6 +148,13 @@ export const CHECKIN_ABI = [
       { name: "currentStreak", type: "uint256" },
       { name: "longestStreak", type: "uint256" },
     ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "isDailyCapReached",
+    inputs: [],
+    outputs: [{ name: "reached", type: "bool" }],
     stateMutability: "view",
   },
   {
@@ -133,6 +195,20 @@ export const CHECKIN_ABI = [
       { name: "active", type: "bool" },
     ],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "setCooldownPeriod",
+    inputs: [{ name: "_seconds", type: "uint256" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "setDailyClaimCap",
+    inputs: [{ name: "_cap", type: "uint256" }],
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -203,6 +279,24 @@ export const CHECKIN_ABI = [
   },
   {
     type: "event",
+    name: "CooldownPeriodUpdated",
+    inputs: [{ name: "newPeriod", type: "uint256", indexed: false }],
+  },
+  {
+    type: "event",
+    name: "DailyCapReached",
+    inputs: [
+      { name: "timestamp", type: "uint256", indexed: false },
+      { name: "claimCount", type: "uint256", indexed: false },
+    ],
+  },
+  {
+    type: "event",
+    name: "DailyClaimCapUpdated",
+    inputs: [{ name: "newCap", type: "uint256", indexed: false }],
+  },
+  {
+    type: "event",
     name: "OwnershipTransferred",
     inputs: [
       { name: "previousOwner", type: "address", indexed: true },
@@ -244,6 +338,15 @@ export const CHECKIN_ABI = [
     type: "error",
     name: "CooldownNotElapsed",
     inputs: [{ name: "timeRemaining", type: "uint256" }],
+  },
+  {
+    type: "error",
+    name: "InvalidCooldown",
+    inputs: [
+      { name: "provided", type: "uint256" },
+      { name: "min", type: "uint256" },
+      { name: "max", type: "uint256" },
+    ],
   },
   {
     type: "error",
