@@ -30,6 +30,7 @@ export async function GET() {
       ogTitle: "Social Score Hub",
       ogDescription: "Your Web3 reputation at a glance",
       ogImageUrl: `${domainUrl}/og.png`,
+      noindex: true,
     },
   };
 
