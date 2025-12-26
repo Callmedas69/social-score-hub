@@ -116,7 +116,6 @@ export async function GET(request: NextRequest) {
             flexDirection: "column",
             width: "100%",
             maxWidth: "430px",
-            height: "100%",
           }}
         >
           {/* Header */}
@@ -124,7 +123,7 @@ export async function GET(request: NextRequest) {
             style={{
               display: "flex",
               alignItems: "center",
-              marginBottom: "16px",
+              marginBottom: "24px",
             }}
           >
             <img
@@ -191,8 +190,8 @@ export async function GET(request: NextRequest) {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              flex: 1,
-              marginTop: "12px",
+              width: "100%",
+              marginTop: "24px",
             }}
           >
             <span
@@ -214,7 +213,7 @@ export async function GET(request: NextRequest) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              marginTop: "12px",
+              marginTop: "24px",
               paddingTop: "12px",
               borderTop: "1px solid #e5e7eb",
             }}
