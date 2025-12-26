@@ -54,6 +54,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta name="base:app_id" content="694e92814d3a403912ed80ec" />
       <body
         className={`${baseSans.variable} ${dotoBold.variable} antialiased`}
       >
