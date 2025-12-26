@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
             display: "flex",
             flexDirection: "column",
             width: "100%",
-            maxWidth: "600px",
+            maxWidth: "430px",
             height: "100%",
           }}
         >
@@ -234,7 +234,7 @@ export async function GET(request: NextRequest) {
     ),
     {
       width: 800,
-      height: 420,
+      height: 533,
       fonts: [
         ...(fonts.interTight
           ? [
