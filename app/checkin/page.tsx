@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -10,15 +10,21 @@ import { Navigation } from "@/components/layout/Navigation";
 gsap.registerPlugin(useGSAP);
 
 export default function CheckInPage() {
+  const [mounted, setMounted] = useState(false);
   const { isConnected } = useAccount();
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
-  
+
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // Prevent hydration mismatch - wait for client mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useGSAP(() => {
-    if (!containerRef.current) return;
+    if (!mounted || !containerRef.current) return;
 
     // Set initial states
     gsap.set([titleRef.current, taglineRef.current, cardRef.current], {
@@ -54,12 +60,12 @@ export default function CheckInPage() {
       ease: "power3.out",
     }, 0.45);
 
-  }, { scope: containerRef });
+  }, { scope: containerRef, dependencies: [mounted] });
 
-  if (!isConnected) {
+  if (!mounted || !isConnected) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <p className="text-gray-400 text-sm">Connecting wallet...</p>
+        <p className="text-gray-400 text-sm animate-pulse">Connecting wallet...</p>
         <Navigation />
       </div>
     );
