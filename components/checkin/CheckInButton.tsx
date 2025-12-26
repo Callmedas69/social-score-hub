@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { memo, useEffect, useState, useRef, useMemo } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -10,8 +10,8 @@ import { formatTimeRemaining } from "@/lib/utils";
 
 gsap.registerPlugin(useGSAP);
 
-// Animated checkmark SVG component
-function AnimatedCheckmark({ color = "#fff" }: { color?: string }) {
+// Animated checkmark SVG component (memoized for performance)
+const AnimatedCheckmark = memo(function AnimatedCheckmark({ color = "#fff" }: { color?: string }) {
   const pathRef = useRef<SVGPathElement>(null);
 
   useGSAP(() => {
@@ -48,7 +48,7 @@ function AnimatedCheckmark({ color = "#fff" }: { color?: string }) {
       />
     </svg>
   );
-}
+});
 
 interface CheckInButtonProps {
   chainId: SupportedChainId;
@@ -75,11 +75,16 @@ export function CheckInButton({
   const { switchChain } = useSwitchChain();
   const { checkIn, isPending, isConfirming, isSuccess, error, reset } =
     useCheckIn(chainId);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const [remaining, setRemaining] = useState(Number(timeRemaining));
   const [justCheckedIn, setJustCheckedIn] = useState(false);
   const isCorrectChain = chain?.id === chainId;
+
+  // Refs for callbacks to avoid effect re-runs
+  const onSuccessRef = useRef(onSuccess);
+  const onCooldownCompleteRef = useRef(onCooldownComplete);
+  onSuccessRef.current = onSuccess;
+  onCooldownCompleteRef.current = onCooldownComplete;
 
   useEffect(() => {
     setRemaining(Number(timeRemaining));
@@ -99,7 +104,7 @@ export function CheckInButton({
       setRemaining((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          onCooldownComplete?.();
+          onCooldownCompleteRef.current?.();
           return 0;
         }
         return prev - 1;
@@ -107,69 +112,24 @@ export function CheckInButton({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [canCheckIn, onCooldownComplete]);
+  }, [canCheckIn]);
 
   useEffect(() => {
     if (isSuccess) {
       setJustCheckedIn(true);
-      onSuccess?.();
+      onSuccessRef.current?.();
       const timer = setTimeout(() => reset(), 2000);
       return () => clearTimeout(timer);
     }
-  }, [isSuccess, onSuccess, reset]);
+  }, [isSuccess, reset]);
 
-  // Button animation handlers with proper cleanup
-  const handleMouseEnter = useCallback(() => {
-    if (buttonRef.current) {
-      gsap.killTweensOf(buttonRef.current);
-      gsap.to(buttonRef.current, {
-        scale: 1.02,
-        duration: 0.2,
-        ease: "power2.out",
-      });
-    }
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    if (buttonRef.current) {
-      gsap.killTweensOf(buttonRef.current);
-      gsap.to(buttonRef.current, {
-        scale: 1,
-        duration: 0.2,
-        ease: "power2.out",
-      });
-    }
-  }, []);
-
-  const handleMouseDown = useCallback(() => {
-    if (buttonRef.current) {
-      gsap.killTweensOf(buttonRef.current);
-      gsap.to(buttonRef.current, {
-        scale: 0.98,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-    }
-  }, []);
-
-  const handleMouseUp = useCallback(() => {
-    if (buttonRef.current) {
-      gsap.killTweensOf(buttonRef.current);
-      gsap.to(buttonRef.current, {
-        scale: 1.02,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-    }
-  }, []);
-
-  const handleClick = useCallback(() => {
-    if (!isCorrectChain) {
+  const handleClick = (action: "switch" | "checkIn") => {
+    if (action === "switch") {
       switchChain?.({ chainId });
     } else {
       checkIn();
     }
-  }, [isCorrectChain, switchChain, chainId, checkIn]);
+  };
 
   const bgStyle = useMemo(
     () => ({ backgroundColor: accentColor }),
@@ -180,7 +140,6 @@ export function CheckInButton({
     () => ({
       borderColor: accentColor,
       backgroundColor: `${accentColor}15`,
-      transformOrigin: "center" as const,
     }),
     [accentColor]
   );
@@ -188,7 +147,6 @@ export function CheckInButton({
   const checkInButtonStyle = useMemo(
     () => ({
       backgroundColor: accentColor,
-      transformOrigin: "center" as const,
     }),
     [accentColor]
   );
@@ -232,13 +190,8 @@ export function CheckInButton({
     return (
       <div className="w-full">
         <button
-          ref={buttonRef}
-          onClick={handleClick}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          className="w-full h-8 text-black border-2 font-display"
+          onClick={() => handleClick("switch")}
+          className="w-full h-8 text-black border-2 font-display transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
           style={switchButtonStyle}
         >
           Switch to {chainName}
@@ -257,13 +210,8 @@ export function CheckInButton({
     return (
       <div className="w-full">
         <button
-          ref={buttonRef}
-          onClick={handleClick}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          className="w-full h-8 text-white font-display uppercase"
+          onClick={() => handleClick("checkIn")}
+          className="w-full h-8 text-white font-display uppercase transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
           style={checkInButtonStyle}
         >
           Hello {chainName}
@@ -275,6 +223,11 @@ export function CheckInButton({
         )}
       </div>
     );
+  }
+
+  // After success, waiting for parent data to refresh - show loading
+  if (justCheckedIn && remaining <= 0) {
+    return <div className="h-8 bg-gray-100 animate-pulse" />;
   }
 
   // Cooldown - show disabled state with countdown

@@ -103,155 +103,138 @@ export async function GET(request: NextRequest) {
           height: "100%",
           width: "100%",
           display: "flex",
-          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
           backgroundColor: "#ffffff",
-          padding: "48px",
+          padding: "24px",
         }}
       >
-        {/* Header */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "32px",
-          }}
-        >
-          <img
-            src={`${DOMAIN_URL}/social_score_hub_logo.svg`}
-            width={44}
-            height={44}
-            style={{ marginRight: "7px" }}
-          />
-          <span
-            style={{
-              fontSize: "32px",
-              fontWeight: 700,
-              fontFamily: "InterTight",
-              color: "#111111",
-            }}
-          >
-            SOCIAL SCORE HUB
-          </span>
-        </div>
-
-        {/* Scores Grid - 3 columns x 2 rows */}
+        {/* Centered content container */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "16px",
+            width: "100%",
+            maxWidth: "600px",
+            height: "100%",
           }}
         >
-          {/* Row 1 */}
-          <div style={{ display: "flex", gap: "16px" }}>
-            {PROVIDERS.slice(0, 3).map((provider) => {
-              const value = scores?.[provider.key as keyof typeof scores] ?? null;
-              const displayValue = formatScore(value as number | null, provider.max, provider.key);
-              const logoUrl = `${DOMAIN_URL}${provider.logo}`;
-              return (
-                <div
-                  key={provider.key}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    backgroundColor: provider.bg,
-                    borderRadius: "12px",
-                    padding: "20px",
-                    flex: 1,
-                    border: `1px solid ${provider.border}`,
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
-                    <img src={logoUrl} width={24} height={24} style={{ borderRadius: "50%" }} />
-                    <span style={{ fontSize: "16px", color: "#6b7280" }}>{provider.label}</span>
-                  </div>
-                  <span style={{ fontSize: "36px", fontWeight: 700, fontFamily: "InterTight", color: value !== null ? provider.scoreColor : "#d1d5db" }}>
-                    {displayValue}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-          {/* Row 2 */}
-          <div style={{ display: "flex", gap: "16px" }}>
-            {PROVIDERS.slice(3, 6).map((provider) => {
-              const value = scores?.[provider.key as keyof typeof scores] ?? null;
-              const displayValue = formatScore(value as number | null, provider.max, provider.key);
-              const logoUrl = `${DOMAIN_URL}${provider.logo}`;
-              return (
-                <div
-                  key={provider.key}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    backgroundColor: provider.bg,
-                    borderRadius: "12px",
-                    padding: "20px",
-                    flex: 1,
-                    border: `1px solid ${provider.border}`,
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
-                    <img src={logoUrl} width={24} height={24} style={{ borderRadius: "50%" }} />
-                    <span style={{ fontSize: "16px", color: "#6b7280" }}>{provider.label}</span>
-                  </div>
-                  <span style={{ fontSize: "36px", fontWeight: 700, fontFamily: "InterTight", color: value !== null ? provider.scoreColor : "#d1d5db" }}>
-                    {displayValue}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Tagline */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 1,
-          }}
-        >
-          <span
+          {/* Header */}
+          <div
             style={{
-              fontSize: "28px",
-              fontWeight: 700,
-              fontFamily: "Doto",
-              color: "#9ca3af",
-              letterSpacing: "0",
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "16px",
             }}
           >
-            NOT A SCORE - JUST THE SIGNALS
-          </span>
-        </div>
+            <img
+              src={`${DOMAIN_URL}/social_score_hub_logo.svg`}
+              width={24}
+              height={24}
+              style={{ marginRight: "6px" }}
+            />
+            <span
+              style={{
+                fontSize: "20px",
+                fontWeight: 700,
+                fontFamily: "InterTight",
+                color: "#111111",
+              }}
+            >
+              SOCIAL SCORE HUB
+            </span>
+          </div>
 
-        {/* Footer */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: "24px",
-            paddingTop: "20px",
-            borderTop: "1px solid #e5e7eb",
-          }}
-        >
-          <span style={{ fontSize: "12px", color: "#6b7280" }}>
-            {scores?.username && `@${scores.username} • `}
-            {scores?.fid && `FID: ${scores.fid} • `}
-            {shortenAddress(address)}
-          </span>
-          <img
-            src={`${DOMAIN_URL}/chains/Base_lockup_2color.svg`}
-            height={18}
-          />
+          {/* Scores Grid - 2 columns x 3 rows */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+            }}
+          >
+            {[0, 1, 2].map((rowIndex) => (
+              <div key={rowIndex} style={{ display: "flex", gap: "8px" }}>
+                {PROVIDERS.slice(rowIndex * 2, rowIndex * 2 + 2).map((provider) => {
+                  const value = scores?.[provider.key as keyof typeof scores] ?? null;
+                  const displayValue = formatScore(value as number | null, provider.max, provider.key);
+                  const logoUrl = `${DOMAIN_URL}${provider.logo}`;
+                  return (
+                    <div
+                      key={provider.key}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        backgroundColor: provider.bg,
+                        padding: "10px 12px",
+                        flex: 1,
+                        border: `1px solid ${provider.border}`,
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "2px" }}>
+                        <img src={logoUrl} width={14} height={14} style={{ borderRadius: "50%" }} />
+                        <span style={{ fontSize: "10px", color: "#6b7280" }}>{provider.label}</span>
+                      </div>
+                      <span style={{ fontSize: "20px", fontWeight: 700, fontFamily: "InterTight", color: value !== null ? provider.scoreColor : "#d1d5db" }}>
+                        {displayValue}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+
+          {/* Tagline */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              marginTop: "12px",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "14px",
+                fontWeight: 700,
+                fontFamily: "Doto",
+                color: "#9ca3af",
+                letterSpacing: "0",
+              }}
+            >
+              NOT A SCORE - JUST THE SIGNALS
+            </span>
+          </div>
+
+          {/* Footer */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: "12px",
+              paddingTop: "12px",
+              borderTop: "1px solid #e5e7eb",
+            }}
+          >
+            <span style={{ fontSize: "9px", color: "#6b7280" }}>
+              {scores?.username && `@${scores.username} • `}
+              {scores?.fid && `FID: ${scores.fid} • `}
+              {shortenAddress(address)}
+            </span>
+            <img
+              src={`${DOMAIN_URL}/chains/Base_lockup_2color.svg`}
+              height={12}
+            />
+          </div>
         </div>
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
+      width: 800,
+      height: 420,
       fonts: [
         ...(fonts.interTight
           ? [
