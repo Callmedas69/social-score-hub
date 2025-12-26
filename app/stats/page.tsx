@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { UserCard } from "@/components/stats/UserCard";
 import { HealthCheck } from "@/components/stats/HealthCheck";
 import { ActivityDashboard } from "@/components/stats/ActivityDashboard";
 import { Navigation } from "@/components/layout/Navigation";
@@ -11,12 +12,18 @@ import { Navigation } from "@/components/layout/Navigation";
 gsap.registerPlugin(useGSAP);
 
 export default function StatsPage() {
+  const [mounted, setMounted] = useState(false);
   const { isConnected } = useAccount();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useGSAP(
     () => {
-      if (!isConnected) return;
+      if (!mounted || !isConnected) return;
 
       // Respect reduced motion preference
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -55,10 +62,10 @@ export default function StatsPage() {
         "-=0.3"
       );
     },
-    { scope: containerRef, dependencies: [isConnected] }
+    { scope: containerRef, dependencies: [mounted, isConnected] }
   );
 
-  if (!isConnected) {
+  if (!mounted || !isConnected) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
         <div className="flex-1 flex items-center justify-center p-4">
@@ -75,6 +82,11 @@ export default function StatsPage() {
         <h1 className="stats-title text-2xl font-extrabold tracking-tighter text-gray-900 uppercase font-sans opacity-0">
           Wallet Info
         </h1>
+
+        {/* User Card */}
+        <div className="stats-section opacity-0">
+          <UserCard />
+        </div>
 
         {/* Health Check */}
         <div className="stats-section opacity-0">
