@@ -129,7 +129,7 @@ export default function EcosystemPage() {
               onClick={() => openUrl(app.url)}
               className="ecosystem-card opacity-0 block w-full text-left"
             >
-              <Card className="hover:shadow-md transition-shadow cursor-pointer py-0">
+              <Card className="rounded-none hover:shadow-md transition-shadow cursor-pointer py-0">
                 <CardContent className="flex items-center gap-3 p-3">
                   <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
                     <AppLogo src={app.logo} name={app.name} />

@@ -5,6 +5,7 @@ import { Share2, Check } from "lucide-react";
 import { useAccount } from "wagmi";
 import { sdk } from "@farcaster/miniapp-sdk";
 import { Button } from "@/components/ui/button";
+import { DOMAIN_URL } from "@/config/constants";
 
 export function ShareScoreButton() {
   const { address } = useAccount();
@@ -16,15 +17,14 @@ export function ShareScoreButton() {
 
     setIsSharing(true);
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_DOMAIN_URL || window.location.origin;
-    const shareUrl = `${baseUrl}/score?address=${address}`;
+    const shareUrl = `${DOMAIN_URL}/score?address=${address}`;
+    const ogImageUrl = `${DOMAIN_URL}/api/og/score?address=${address}`;
 
     // Try Farcaster composeCast first, fallback to clipboard
     try {
       await sdk.actions.composeCast({
         text: "Check out my Social Score Hub!",
-        embeds: [shareUrl] as [string],
+        embeds: [shareUrl, ogImageUrl] as [string, string],
       });
       setIsSharing(false);
       return;

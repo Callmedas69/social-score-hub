@@ -2,8 +2,7 @@
 
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState, useEffect, type ReactNode } from "react";
-import { sdk } from "@farcaster/miniapp-sdk";
+import { useState, type ReactNode } from "react";
 import { wagmiConfig } from "@/config/wagmi";
 
 interface AppProvidersProps {
@@ -22,19 +21,6 @@ export function AppProviders({ children }: AppProvidersProps) {
         },
       })
   );
-
-  useEffect(() => {
-    const initFarcaster = async () => {
-      try {
-        // Enable native back navigation for Next.js routing
-        await sdk.back.enableWebNavigation();
-      } catch (error) {
-        console.log("Not in Farcaster Mini App context");
-      }
-    };
-
-    initFarcaster();
-  }, []);
 
   return (
     <WagmiProvider config={wagmiConfig}>

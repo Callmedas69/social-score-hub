@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -12,12 +12,18 @@ import { Navigation } from "@/components/layout/Navigation";
 gsap.registerPlugin(useGSAP);
 
 export default function ScorePage() {
+  const [mounted, setMounted] = useState(false);
   const { isConnected } = useAccount();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useGSAP(
     () => {
-      if (!isConnected) return;
+      if (!mounted || !isConnected) return;
 
       // Respect reduced motion preference
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -86,10 +92,10 @@ export default function ScorePage() {
         "-=0.2"
       );
     },
-    { scope: containerRef, dependencies: [isConnected] }
+    { scope: containerRef, dependencies: [mounted, isConnected] }
   );
 
-  if (!isConnected) {
+  if (!mounted || !isConnected) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
         <div className="flex-1 flex items-center justify-center p-4">

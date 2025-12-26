@@ -5,6 +5,30 @@ import { ActivityHeatmap } from "./ActivityHeatmap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Activity, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+
+function useCountUp(target: number, duration = 1000) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (target === 0) {
+      setValue(0);
+      return;
+    }
+    const startTime = performance.now();
+    const animate = (time: number) => {
+      const elapsed = time - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [target, duration]);
+
+  return value;
+}
 
 function StatCard({
   label,
@@ -15,11 +39,21 @@ function StatCard({
   value: string | number;
   subValue?: string;
 }) {
+  const numericValue = typeof value === "number" ? value : 0;
+  const displayValue = useCountUp(numericValue);
+  const isNumeric = typeof value === "number";
+
   return (
-    <div className="text-center p-3 md:p-4 bg-gray-50 rounded-lg">
-      <div className="text-lg md:text-2xl font-bold text-blue-600">{value}</div>
-      <div className="text-[10px] md:text-xs text-gray-500 mt-1">{label}</div>
-      {subValue && <div className="text-[10px] md:text-xs text-gray-400 mt-0.5">{subValue}</div>}
+    <div className="text-center p-4 bg-gray-50 rounded-xl">
+      <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+        {isNumeric ? displayValue.toLocaleString() : value}
+      </div>
+      <div className="text-[10px] md:text-xs uppercase tracking-wider text-gray-500 mt-2">
+        {label}
+      </div>
+      {subValue && (
+        <div className="text-[10px] text-gray-400 mt-0.5">{subValue}</div>
+      )}
     </div>
   );
 }
@@ -28,7 +62,7 @@ function LoadingSkeleton() {
   return (
     <div className="space-y-4">
       {/* Heatmap skeleton */}
-      <Card>
+      <Card className="rounded-none">
         <CardHeader>
           <Skeleton className="h-5 w-24" />
         </CardHeader>
@@ -81,7 +115,7 @@ export function ActivityDashboard() {
 
   if (error) {
     return (
-      <Card>
+      <Card className="rounded-none">
         <CardContent className="pt-6">
           <p className="text-center text-red-500">
             Failed to load activity data. Please try again.
@@ -94,7 +128,7 @@ export function ActivityDashboard() {
   return (
     <div className="space-y-4">
       {/* Activity Heatmap */}
-      <Card className="gap-2">
+      <Card className="rounded-none gap-2">
         <CardHeader className="pb-0">
           <CardTitle className="text-base flex items-center gap-2">
             <Activity className="w-4 h-4" />
@@ -144,7 +178,7 @@ export function ActivityDashboard() {
       </div>
 
       {/* Date Info */}
-      <Card className="gap-0">
+      <Card className="rounded-none">
         <CardContent>
           <div className="flex justify-between text-sm">
             <div>

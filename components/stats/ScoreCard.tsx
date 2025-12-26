@@ -21,7 +21,7 @@ interface ScoreCardProps {
 }
 
 // Base card styles for hover effect
-const CARD_BASE = "p-4 rounded-xl border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5";
+const CARD_BASE = "p-4 border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5";
 
 // Consolidated provider styles (DRY - replaces 3 switch statements)
 const PROVIDER_STYLES = {
@@ -64,7 +64,7 @@ const DEFAULT_STYLES = {
 };
 
 const NOT_FOUND_STYLES = {
-  card: "p-4 rounded-xl border bg-gray-50 border-gray-100",
+  card: "p-4 border bg-gray-50 border-gray-100",
   text: "text-gray-400",
   score: "text-gray-300",
 };
@@ -88,7 +88,7 @@ export const ScoreCard = memo(function ScoreCard({
 }: ScoreCardProps) {
   if (isLoading) {
     return (
-      <div className="p-4 bg-white rounded-xl border border-gray-100">
+      <div className="p-4 bg-white border border-gray-100">
         <div className="flex items-center gap-2 mb-3">
           <Skeleton className="h-6 w-6 rounded-full animate-pulse" />
           <Skeleton className="h-4 w-20 animate-pulse" />
@@ -102,7 +102,7 @@ export const ScoreCard = memo(function ScoreCard({
 
   if (error) {
     return (
-      <div className="p-4 bg-white rounded-xl border border-red-100">
+      <div className="p-4 bg-white border border-red-100">
         <div className="flex items-center gap-2 mb-3">
           {providerLogo && (
             <div className="w-6 h-6 rounded-full overflow-hidden relative opacity-50">
