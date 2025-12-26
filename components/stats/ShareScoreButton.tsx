@@ -20,20 +20,16 @@ export function ShareScoreButton() {
       process.env.NEXT_PUBLIC_DOMAIN_URL || window.location.origin;
     const shareUrl = `${baseUrl}/score?address=${address}`;
 
-    // Check if we're in Farcaster context
-    const isInFarcaster = typeof window !== "undefined" && window.parent !== window;
-
-    if (isInFarcaster) {
-      try {
-        await sdk.actions.composeCast({
-          text: "Check out my Social Score Hub!",
-          embeds: [shareUrl] as [string],
-        });
-        setIsSharing(false);
-        return;
-      } catch (err) {
-        console.log("composeCast failed:", err);
-      }
+    // Try Farcaster composeCast first, fallback to clipboard
+    try {
+      await sdk.actions.composeCast({
+        text: "Check out my Social Score Hub!",
+        embeds: [shareUrl] as [string],
+      });
+      setIsSharing(false);
+      return;
+    } catch {
+      // Not in Farcaster or composeCast failed - fallback to clipboard
     }
 
     // Fallback: copy to clipboard

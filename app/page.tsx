@@ -1,17 +1,30 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { CircleChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { sdk } from "@farcaster/miniapp-sdk";
 
 gsap.registerPlugin(useGSAP);
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Signal Farcaster that the app is ready to display
+  useEffect(() => {
+    const initReady = async () => {
+      try {
+        await sdk.actions.ready();
+      } catch (error) {
+        // Not in Farcaster Mini App context
+      }
+    };
+    initReady();
+  }, []);
 
   useGSAP(
     () => {

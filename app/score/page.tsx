@@ -8,7 +8,6 @@ import Image from "next/image";
 import { SocialScores } from "@/components/stats/SocialScores";
 import { ShareScoreButton } from "@/components/stats/ShareScoreButton";
 import { Navigation } from "@/components/layout/Navigation";
-import { AddMiniAppModal } from "@/components/farcaster/AddMiniAppModal";
 
 gsap.registerPlugin(useGSAP);
 
@@ -124,7 +123,6 @@ export default function ScorePage() {
       </main>
 
       <Navigation />
-      <AddMiniAppModal />
     </div>
   );
 }

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sparkles, Activity, Compass } from "lucide-react";
 import { BaseIcon } from "@/components/icons/BaseIcon";
-import { AddMiniAppButton } from "@/components/farcaster/AddMiniAppButton";
 
 const navItems = [
   { href: "/score", label: "Score", icon: Sparkles },
@@ -36,7 +35,6 @@ export function Navigation() {
             </Link>
           );
         })}
-        <AddMiniAppButton variant="icon" />
       </div>
     </nav>
   );
