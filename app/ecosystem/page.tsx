@@ -51,6 +51,36 @@ const ecosystemApps = [
     url: "https://zora.co/invite/0xdas",
     logo: "/ecosystem/zora.png",
   },
+  {
+    name: "Geoplet",
+    description: "Transforming your Warplets into Bauhaus and Suprematism Geometric",
+    url: "https://farcaster.xyz/miniapps/qSFv2sErypbU/geoplet",
+    logo: "/ecosystem/geoplet.png",
+  },
+  {
+    name: "What is Base For",
+    description: "Express",
+    url: "https://farcaster.xyz/miniapps/M-pFqSWC17gI/what-is-base-for",
+    logo: "/ecosystem/basefor.png",
+  },
+  {
+    name: "TrustCheck",
+    description: "Onchain verifiable reputation signal",
+    url: "https://farcaster.xyz/miniapps/zrdqem2I17Kw/trustcheck",
+    logo: "/ecosystem/trustcheck.svg",
+  },
+  {
+    name: "Veil",
+    description: "Veil Cash is a ZK Privacy protocol that allows you to send and receive ETH privately on Base with compliance built in.",
+    url: "https://farcaster.xyz/miniapps/vTczrQmzgG_q/veil",
+    logo: "/ecosystem/veil.png",
+  },
+  {
+    name: "Farmer",
+    description: "Farming Base interactions with daily check-ins, NFTs, and SEED token.",
+    url: "https://farcaster.xyz/miniapps/ezh8_w0EM4h2/farmer",
+    logo: "/ecosystem/farmer.png",
+  },
 ];
 
 export default function EcosystemPage() {
