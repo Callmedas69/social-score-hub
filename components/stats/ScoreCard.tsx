@@ -124,7 +124,6 @@ export const ScoreCard = memo(function ScoreCard({
   }
 
   const displayScore = notFound ? "-" : score ?? "-";
-  const hasScore = !notFound && score !== null;
   const styles = getStyles(providerId, notFound);
 
   return (
@@ -156,12 +155,10 @@ export const ScoreCard = memo(function ScoreCard({
         )}
       </div>
 
-      {/* Tier label - only show when user has a score and tier */}
-      {hasScore && tierLabel && (
-        <span className={`text-xs font-medium ${styles.text}`}>
-          {tierLabel}
-        </span>
-      )}
+      {/* Tier label - always show, dash when no value */}
+      <span className={`text-xs font-medium ${styles.text}`}>
+        {tierLabel || "-"}
+      </span>
 
       {/* Description */}
       <p className="text-[10px] text-gray-500 mt-1 italic">

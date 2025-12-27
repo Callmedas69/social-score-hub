@@ -14,6 +14,9 @@ export function useDailyClaimStats() {
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "getDailyClaimStats",
+    query: {
+      staleTime: 24 * 60 * 60 * 1000, // 24 hours - matches contract check-in period
+    },
   });
 
   const stats: DailyClaimStats | null = data

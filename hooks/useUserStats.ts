@@ -14,6 +14,7 @@ export function useUserStats(chainId: SupportedChainId) {
     chainId,
     query: {
       enabled: isConnected && !!address,
+      staleTime: 24 * 60 * 60 * 1000, // 24 hours - matches contract check-in period
     },
   });
 

@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
             display: "flex",
             flexDirection: "column",
             width: "100%",
-            maxWidth: "430px",
+            maxWidth: "650px",
           }}
         >
           {/* Header */}
