@@ -1,14 +1,14 @@
 "use client";
 
-import { useCallback, memo, type CSSProperties } from "react";
+import { useCallback, useState, memo, type CSSProperties } from "react";
 import Image from "next/image";
 import { CheckInButton } from "./CheckInButton";
 import { RewardsPreview } from "./RewardsPreview";
+import { SuccessModal } from "./SuccessModal";
 import { useCanCheckIn } from "@/hooks/useCanCheckIn";
 import { useUserStats } from "@/hooks/useUserStats";
 import { CHAIN_CONFIG, type SupportedChainId } from "@/config/constants";
 import { cn } from "@/lib/utils";
-import { CountUp } from "@/components/animations";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChainCheckInCardBaseProps {
@@ -27,10 +27,12 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
   const config = CHAIN_CONFIG[chainId];
   const { status, isLoading, refetch: refetchStatus } = useCanCheckIn(chainId);
   const { formatted, isLoading: isLoadingStats, refetch: refetchStats } = useUserStats(chainId);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleCheckInSuccess = useCallback(() => {
     refetchStatus();
     refetchStats();
+    setShowSuccessModal(true);
   }, [refetchStatus, refetchStats]);
 
   return (
@@ -67,7 +69,7 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
               {isLoadingStats ? (
                 <Skeleton className="w-6 h-4 md:h-5 mx-auto" />
               ) : (
-                <CountUp end={formatted?.currentStreak ?? 0} delay={1} />
+                formatted?.currentStreak ?? 0
               )}
             </div>
             <div className="text-[10px] md:text-xs text-gray-500">Streak</div>
@@ -77,7 +79,7 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
               {isLoadingStats ? (
                 <Skeleton className="w-6 h-4 md:h-5 mx-auto" />
               ) : (
-                <CountUp end={formatted?.longestStreak ?? 0} delay={1.1} />
+                formatted?.longestStreak ?? 0
               )}
             </div>
             <div className="text-[10px] md:text-xs text-gray-500">Longest</div>
@@ -87,7 +89,7 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
               {isLoadingStats ? (
                 <Skeleton className="w-6 h-4 md:h-5 mx-auto" />
               ) : (
-                <CountUp end={formatted?.totalCheckIns ?? 0} delay={1.2} />
+                formatted?.totalCheckIns ?? 0
               )}
             </div>
             <div className="text-[10px] md:text-xs text-gray-500">All-Time</div>
@@ -115,6 +117,16 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
         accentColor={config.color}
         chainName={config.name}
         isLoading={isLoading}
+      />
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        stats={formatted}
+        isLoadingStats={isLoadingStats}
+        chainName={config.name}
+        accentColor={config.color}
       />
     </div>
   );
