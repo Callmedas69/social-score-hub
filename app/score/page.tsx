@@ -2,14 +2,11 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import Image from "next/image";
 import { SocialScores } from "@/components/stats/SocialScores";
 import { ShareScoreButton } from "@/components/stats/ShareScoreButton";
 import { Navigation } from "@/components/layout/Navigation";
-
-gsap.registerPlugin(useGSAP);
 
 export default function ScorePage() {
   const [mounted, setMounted] = useState(false);

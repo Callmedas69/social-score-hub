@@ -2,14 +2,11 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { UserCard } from "@/components/stats/UserCard";
 import { HealthCheck } from "@/components/stats/HealthCheck";
 import { ActivityDashboard } from "@/components/stats/ActivityDashboard";
 import { Navigation } from "@/components/layout/Navigation";
-
-gsap.registerPlugin(useGSAP);
 
 export default function StatsPage() {
   const [mounted, setMounted] = useState(false);

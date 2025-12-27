@@ -116,14 +116,15 @@ export const ScoreCard = memo(function ScoreCard({
           )}
           <span className="text-sm font-medium text-gray-500">{provider}</span>
         </div>
-        <p className="text-xl font-bold text-gray-300 mb-1">—</p>
+        <p className="text-xl font-bold text-gray-300 mb-1">-</p>
         <p className="text-xs text-red-500">Failed to load</p>
         <p className="text-[10px] text-gray-400 mt-1 italic">{description || "\u00A0"}</p>
       </div>
     );
   }
 
-  const displayScore = notFound ? "—" : score ?? "—";
+  const displayScore = notFound ? "-" : score ?? "-";
+  const hasScore = !notFound && score !== null;
   const styles = getStyles(providerId, notFound);
 
   return (
@@ -155,10 +156,12 @@ export const ScoreCard = memo(function ScoreCard({
         )}
       </div>
 
-      {/* Tier label - always render for consistent height */}
-      <span className={`text-xs font-medium ${styles.text}`}>
-        {notFound ? "-" : tierLabel || "-"}
-      </span>
+      {/* Tier label - only show when user has a score and tier */}
+      {hasScore && tierLabel && (
+        <span className={`text-xs font-medium ${styles.text}`}>
+          {tierLabel}
+        </span>
+      )}
 
       {/* Description */}
       <p className="text-[10px] text-gray-500 mt-1 italic">

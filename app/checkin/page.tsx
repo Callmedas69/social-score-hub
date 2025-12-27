@@ -2,12 +2,9 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { BaseCheckInCard, CooldownTimer } from "@/components/checkin";
 import { Navigation } from "@/components/layout/Navigation";
-
-gsap.registerPlugin(useGSAP);
 
 export default function CheckInPage() {
   const [mounted, setMounted] = useState(false);
@@ -62,10 +59,26 @@ export default function CheckInPage() {
 
   }, { scope: containerRef, dependencies: [mounted] });
 
-  if (!mounted || !isConnected) {
+  // Hydration loading state
+  if (!mounted) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <p className="text-gray-400 text-sm animate-pulse">Connecting wallet...</p>
+        <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+        <Navigation />
+      </div>
+    );
+  }
+
+  // Wallet not connected state
+  if (!isConnected) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
+        <div className="text-center space-y-3">
+          <h2 className="text-xl font-bold text-gray-900">Connect Your Wallet</h2>
+          <p className="text-gray-500 text-sm max-w-xs">
+            Connect your wallet to start your daily check-in streak
+          </p>
+        </div>
         <Navigation />
       </div>
     );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, memo } from "react";
+import { useState, useMemo, memo, useEffect, useRef } from "react";
 import { ChevronDown, Gift } from "lucide-react";
 import {
   Collapsible,
@@ -15,10 +15,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const RewardsPreview = memo(function RewardsPreview() {
   const [isOpen, setIsOpen] = useState(false);
+  const hasAutoOpened = useRef(false);
   const { rewards, isLoading } = usePendingRewards();
   const { stats: dailyStats, isLoading: loadingStats } = useDailyClaimStats();
   const tokenAddresses = useMemo(() => rewards.map((r) => r.token), [rewards]);
   const { metadataMap } = useTokenMetadata(tokenAddresses);
+
+  const hasRewards = rewards.length > 0;
+  const isCapReached = dailyStats?.isCapReached ?? false;
+  const isUnlimited = dailyStats?.isUnlimited ?? true;
+  const isAvailable = hasRewards && !isCapReached;
+
+  // Auto-open when rewards are available (only once after data loads)
+  useEffect(() => {
+    if (!isLoading && !loadingStats && isAvailable && !hasAutoOpened.current) {
+      setIsOpen(true);
+      hasAutoOpened.current = true;
+    }
+  }, [isLoading, loadingStats, isAvailable]);
 
   if (isLoading || loadingStats) {
     return (
@@ -27,13 +41,6 @@ export const RewardsPreview = memo(function RewardsPreview() {
       </div>
     );
   }
-
-  const hasRewards = rewards.length > 0;
-  const isCapReached = dailyStats?.isCapReached ?? false;
-  const isUnlimited = dailyStats?.isUnlimited ?? true;
-
-  // Determine display state
-  const isAvailable = hasRewards && !isCapReached;
 
   // Format remaining claims display
   const remainingDisplay = dailyStats && !isUnlimited

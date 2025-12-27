@@ -48,3 +48,30 @@ export function formatTokenAmount(amount: bigint, decimals: number): string {
 
   return `${whole}.${trimmed}`;
 }
+
+/**
+ * Converts technical Web3 error messages to user-friendly text
+ */
+export function getUserFriendlyError(error: Error | null): string {
+  if (!error) return "";
+
+  const message = error.message.toLowerCase();
+
+  if (message.includes("rejected") || message.includes("denied")) {
+    return "Transaction cancelled";
+  }
+  if (message.includes("insufficient funds") || message.includes("insufficient balance")) {
+    return "Insufficient funds for gas";
+  }
+  if (message.includes("network") || message.includes("disconnected")) {
+    return "Network error. Please try again";
+  }
+  if (message.includes("timeout")) {
+    return "Request timed out. Please try again";
+  }
+  if (message.includes("already checked in") || message.includes("cooldown")) {
+    return "Already checked in today";
+  }
+
+  return "Something went wrong. Please try again";
+}

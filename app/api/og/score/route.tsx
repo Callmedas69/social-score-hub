@@ -20,9 +20,9 @@ const PROVIDERS = [
   { key: "talent_builder", label: "Talent Builder", max: "100", bg: "#f3f4f6", border: "#d1d5db", scoreColor: "#1f2937", logo: "/score_provider/Talent_Protocol.jpg" },
   { key: "talent_creator", label: "Talent Creator", max: "100", bg: "#f3f4f6", border: "#d1d5db", scoreColor: "#1f2937", logo: "/score_provider/Talent_Protocol.jpg" },
   { key: "neynar", label: "Neynar", max: "1.0", bg: "#faf5ff", border: "#e9d5ff", scoreColor: "#9333ea", logo: "/score_provider/Neynar_400x400.jpg" },
-  { key: "gitcoin", label: "Gitcoin", max: "100", bg: "#ecfdf5", border: "#a7f3d0", scoreColor: "#059669", logo: "/score_provider/human_paspport.jpg" },
-  { key: "ethos", label: "ETHOS", max: null, bg: "#f5f5f4", border: "#d6d3d1", scoreColor: "#57534e", logo: "/score_provider/ethos_logo.png" },
   { key: "quotient", label: "Quotient", max: "100", bg: "#fff7ed", border: "#fed7aa", scoreColor: "#ea580c", logo: "/score_provider/Quotient.png" },
+  { key: "ethos", label: "ETHOS", max: null, bg: "#f5f5f4", border: "#d6d3d1", scoreColor: "#57534e", logo: "/score_provider/ethos_logo.png" },
+  { key: "gitcoin", label: "Gitcoin", max: "100", bg: "#ecfdf5", border: "#a7f3d0", scoreColor: "#059669", logo: "/score_provider/human_paspport.jpg" },
 ];
 
 async function fetchScores(address: string) {

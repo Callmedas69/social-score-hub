@@ -79,21 +79,6 @@ export function SocialScores() {
           />
         </div>
 
-        {/* Gitcoin Passport */}
-        <div className="score-card opacity-0">
-          <ScoreCard
-            provider="Passport"
-            providerId="gitcoin"
-            providerLogo="/score_provider/human_paspport.jpg"
-            score={gitcoin.data?.score ?? null}
-            tierLabel={gitcoin.data?.passing_score ? "Verified Human" : null}
-            description="Sybil Resistance"
-            isLoading={gitcoin.isLoading}
-            error={gitcoin.error as Error | null}
-            notFound={!gitcoin.isLoading && !gitcoin.data}
-          />
-        </div>
-
         {/* Quotient */}
         <div className="score-card opacity-0">
           <ScoreCard
@@ -136,6 +121,21 @@ export function SocialScores() {
             isLoading={ssa.isLoading}
             error={ssa.error as Error | null}
             notFound={!ssa.isLoading && !ssa.hasMinted && ssa.data === 0}
+          />
+        </div>
+
+        {/* Gitcoin Passport */}
+        <div className="score-card opacity-0">
+          <ScoreCard
+            provider="Passport"
+            providerId="gitcoin"
+            providerLogo="/score_provider/human_paspport.jpg"
+            score={gitcoin.data?.score ?? null}
+            tierLabel={gitcoin.data?.passing_score ? "Verified Human" : null}
+            description="Sybil Resistance"
+            isLoading={gitcoin.isLoading}
+            error={gitcoin.error as Error | null}
+            notFound={!gitcoin.isLoading && !gitcoin.data}
           />
         </div>
       </div>

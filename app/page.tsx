@@ -3,13 +3,10 @@
 import { useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { CircleChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { sdk } from "@farcaster/miniapp-sdk";
-
-gsap.registerPlugin(useGSAP);
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);

@@ -1,10 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(useGSAP);
+import { gsap, useGSAP } from "@/lib/gsap";
 
 interface CountUpProps {
   end: number;
@@ -64,7 +61,9 @@ export function CountUp({ end, duration = 1, delay = 0, className = "" }: CountU
     }
 
     prevEndRef.current = end;
-  }, [end, duration, delay]);
+    // Note: duration and delay are intentionally excluded as they're static props
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [end]);
 
   return <span ref={displayRef} className={className}>0</span>;
 }

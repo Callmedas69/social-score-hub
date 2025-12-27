@@ -2,15 +2,12 @@
 
 import { useRef, useState } from "react";
 import { useAccount } from "wagmi";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { Navigation } from "@/components/layout/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { useFarcasterActions } from "@/hooks/useFarcasterActions";
-
-gsap.registerPlugin(useGSAP);
 
 function AppLogo({ src, name }: { src: string; name: string }) {
   const [hasError, setHasError] = useState(false);

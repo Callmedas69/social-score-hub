@@ -9,6 +9,7 @@ import { useUserStats } from "@/hooks/useUserStats";
 import { CHAIN_CONFIG, type SupportedChainId } from "@/config/constants";
 import { cn } from "@/lib/utils";
 import { CountUp } from "@/components/animations";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChainCheckInCardBaseProps {
   chainId: SupportedChainId;
@@ -25,7 +26,7 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
 }: ChainCheckInCardBaseProps) {
   const config = CHAIN_CONFIG[chainId];
   const { status, isLoading, refetch: refetchStatus } = useCanCheckIn(chainId);
-  const { formatted, refetch: refetchStats } = useUserStats(chainId);
+  const { formatted, isLoading: isLoadingStats, refetch: refetchStats } = useUserStats(chainId);
 
   const handleCheckInSuccess = useCallback(() => {
     refetchStatus();
@@ -62,25 +63,44 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
         {/* Stats: Current | Highest | All-Time */}
         <div className="flex items-center gap-2 md:gap-4">
           <div className="text-center">
-            <div className="text-xs md:text-lg font-bold text-gray-900">
-              <CountUp end={formatted?.currentStreak ?? 0} delay={1} />
+            <div className="text-xs md:text-lg font-bold text-gray-900 tracking-tight">
+              {isLoadingStats ? (
+                <Skeleton className="w-6 h-4 md:h-5 mx-auto" />
+              ) : (
+                <CountUp end={formatted?.currentStreak ?? 0} delay={1} />
+              )}
             </div>
             <div className="text-[10px] md:text-xs text-gray-500">Streak</div>
           </div>
           <div className="text-center">
-            <div className="text-xs md:text-lg font-bold text-gray-900">
-              <CountUp end={formatted?.longestStreak ?? 0} delay={1.1} />
+            <div className="text-xs md:text-lg font-bold text-gray-900 tracking-tight">
+              {isLoadingStats ? (
+                <Skeleton className="w-6 h-4 md:h-5 mx-auto" />
+              ) : (
+                <CountUp end={formatted?.longestStreak ?? 0} delay={1.1} />
+              )}
             </div>
             <div className="text-[10px] md:text-xs text-gray-500">Longest</div>
           </div>
           <div className="text-center">
-            <div className="text-xs md:text-lg font-bold text-gray-900">
-              <CountUp end={formatted?.totalCheckIns ?? 0} delay={1.2} />
+            <div className="text-xs md:text-lg font-bold text-gray-900 tracking-tight">
+              {isLoadingStats ? (
+                <Skeleton className="w-6 h-4 md:h-5 mx-auto" />
+              ) : (
+                <CountUp end={formatted?.totalCheckIns ?? 0} delay={1.2} />
+              )}
             </div>
             <div className="text-[10px] md:text-xs text-gray-500">All-Time</div>
           </div>
         </div>
       </div>
+
+      {/* Welcome message for new users */}
+      {!isLoadingStats && formatted?.totalCheckIns === 0 && (
+        <p className="text-xs text-gray-500 text-center mb-3 italic">
+          Start your streak today!
+        </p>
+      )}
 
       {/* AutoClaim Rewards Preview */}
       {showRewardsPreview && <RewardsPreview />}

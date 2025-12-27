@@ -2,13 +2,11 @@
 
 import { memo, useEffect, useState, useRef, useMemo } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { useCheckIn } from "@/hooks/useCheckIn";
 import type { SupportedChainId } from "@/config/constants";
-import { formatTimeRemaining } from "@/lib/utils";
-
-gsap.registerPlugin(useGSAP);
+import { formatTimeRemaining, getUserFriendlyError } from "@/lib/utils";
+import { sdk } from "@farcaster/miniapp-sdk";
 
 // Animated checkmark SVG component (memoized for performance)
 const AnimatedCheckmark = memo(function AnimatedCheckmark({ color = "#fff" }: { color?: string }) {
@@ -72,7 +70,7 @@ export function CheckInButton({
   isLoading = false,
 }: CheckInButtonProps) {
   const { chain } = useAccount();
-  const { switchChain } = useSwitchChain();
+  const { switchChain, isPending: isSwitching } = useSwitchChain();
   const { checkIn, isPending, isConfirming, isSuccess, error, reset } =
     useCheckIn(chainId);
 
@@ -97,27 +95,35 @@ export function CheckInButton({
     }
   }, [canCheckIn]);
 
+  // Timestamp-based countdown to prevent drift over long cooldowns
   useEffect(() => {
-    if (canCheckIn) return;
+    if (canCheckIn || remaining <= 0) return;
+
+    const targetTime = Date.now() + remaining * 1000;
 
     const interval = setInterval(() => {
-      setRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          onCooldownCompleteRef.current?.();
-          return 0;
-        }
-        return prev - 1;
-      });
+      const left = Math.max(0, Math.ceil((targetTime - Date.now()) / 1000));
+      setRemaining(left);
+
+      if (left <= 0) {
+        clearInterval(interval);
+        onCooldownCompleteRef.current?.();
+      }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [canCheckIn]);
+  }, [canCheckIn, remaining]);
 
   useEffect(() => {
     if (isSuccess) {
       setJustCheckedIn(true);
       onSuccessRef.current?.();
+      // Trigger haptic feedback for Farcaster mini app
+      try {
+        sdk.haptics.notificationOccurred("success");
+      } catch {
+        // Silently fail if not in Farcaster context
+      }
       const timer = setTimeout(() => reset(), 2000);
       return () => clearTimeout(timer);
     }
@@ -154,7 +160,7 @@ export function CheckInButton({
   // Loading state
   if (isLoading) {
     return (
-      <div className="h-8 bg-gray-100 animate-pulse" />
+      <div className="h-11 bg-gray-100 animate-pulse" />
     );
   }
 
@@ -163,7 +169,7 @@ export function CheckInButton({
     return (
       <button
         disabled
-        className="w-full h-8 text-white font-display flex items-center justify-center"
+        className="w-full h-11 text-white font-display flex items-center justify-center"
         style={bgStyle}
       >
         {chainName} morning
@@ -177,7 +183,7 @@ export function CheckInButton({
     return (
       <button
         disabled
-        className="w-full h-8 text-white opacity-70 font-display"
+        className="w-full h-11 text-white opacity-70 font-display"
         style={bgStyle}
       >
         {isPending ? "Confirm..." : "Processing..."}
@@ -191,14 +197,15 @@ export function CheckInButton({
       <div className="w-full">
         <button
           onClick={() => handleClick("switch")}
-          className="w-full h-8 text-black border-2 font-display transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          disabled={isSwitching}
+          className="w-full h-11 text-black border-2 font-display transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70"
           style={switchButtonStyle}
         >
-          Switch to {chainName}
+          {isSwitching ? "Switching..." : `Switch to ${chainName}`}
         </button>
         {error && (
           <p className="text-red-500 text-xs mt-2 text-center">
-            {error.message || "Failed to switch chain"}
+            {getUserFriendlyError(error)}
           </p>
         )}
       </div>
@@ -211,14 +218,14 @@ export function CheckInButton({
       <div className="w-full">
         <button
           onClick={() => handleClick("checkIn")}
-          className="w-full h-8 text-white font-display uppercase transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          className="w-full h-11 text-white font-display uppercase transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
           style={checkInButtonStyle}
         >
           Hello {chainName}
         </button>
         {error && (
           <p className="text-red-500 text-xs mt-2 text-center">
-            {error.message || "Transaction failed"}
+            {getUserFriendlyError(error)}
           </p>
         )}
       </div>
@@ -227,14 +234,14 @@ export function CheckInButton({
 
   // After success, waiting for parent data to refresh - show loading
   if (justCheckedIn && remaining <= 0) {
-    return <div className="h-8 bg-gray-100 animate-pulse" />;
+    return <div className="h-11 bg-gray-100 animate-pulse" />;
   }
 
   // Cooldown - show disabled state with countdown
   return (
     <button
       disabled
-      className="w-full h-8 bg-gray-100 text-gray-400 font-display cursor-not-allowed"
+      className="w-full h-11 bg-gray-100 text-gray-400 font-display cursor-not-allowed"
     >
       {formatTimeRemaining(remaining)}
     </button>
