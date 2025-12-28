@@ -1,4 +1,8 @@
+// Base Mainnet
 export const HELLOONCHAIN_ADDRESS = "0xa238AdEfF7999B453bcAb969DAEbea23646Ccc02" as const;
+
+// Celo Mainnet
+export const HELLOONCHAIN_ADDRESS_CELO = "0xB4d57a91DFD21CEe700cD4b63AEB4B4b49a456B9" as const;
 
 export const HELLOONCHAIN_ABI = [
   {

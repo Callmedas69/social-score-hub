@@ -1,12 +1,15 @@
 import { useReadContract, useAccount } from "wagmi";
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/config/constants";
+import { CHECKIN_ADDRESSES, CONTRACT_ABI, type SupportedChainId } from "@/config/constants";
 import type { RewardToken } from "@/types";
 
-export function useActiveRewards() {
+export function useActiveRewards(chainId: SupportedChainId) {
+  const contractAddress = CHECKIN_ADDRESSES[chainId];
+
   const { data, isLoading, error, refetch } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress,
     abi: CONTRACT_ABI,
     functionName: "getAllActiveRewards",
+    chainId,
   });
 
   const rewards: RewardToken[] = (data as RewardToken[]) || [];
@@ -14,14 +17,16 @@ export function useActiveRewards() {
   return { rewards, isLoading, error, refetch };
 }
 
-export function usePendingRewards() {
+export function usePendingRewards(chainId: SupportedChainId) {
   const { address, isConnected } = useAccount();
+  const contractAddress = CHECKIN_ADDRESSES[chainId];
 
   const { data, isLoading, error, refetch } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress,
     abi: CONTRACT_ABI,
     functionName: "willReceiveRewards",
     args: address ? [address] : undefined,
+    chainId,
     query: {
       enabled: isConnected && !!address,
     },

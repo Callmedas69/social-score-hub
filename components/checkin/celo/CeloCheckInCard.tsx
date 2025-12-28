@@ -1,32 +1,23 @@
 "use client";
 
-import { useCallback, useState, memo, type CSSProperties } from "react";
+import { useCallback, useState, memo } from "react";
 import Image from "next/image";
-import { CheckInButton } from "./CheckInButton";
-import { RewardsPreview } from "./RewardsPreview";
-import { SuccessModal } from "./SuccessModal";
+import { celo } from "wagmi/chains";
+import { CheckInButton } from "../CheckInButton";
+import { RewardsPreview } from "../RewardsPreview";
+import { SuccessModal } from "../SuccessModal";
 import { useCanCheckIn } from "@/hooks/useCanCheckIn";
 import { useUserStats } from "@/hooks/useUserStats";
-import { CHAIN_CONFIG, type SupportedChainId } from "@/config/constants";
-import { cn } from "@/lib/utils";
+import { CHAIN_CONFIG } from "@/config/constants";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface ChainCheckInCardBaseProps {
-  chainId: SupportedChainId;
-  className?: string;
-  cardStyle?: CSSProperties;
-  showRewardsPreview?: boolean;
-}
+// Celo chain configuration
+const CHAIN_ID = celo.id;
+const config = CHAIN_CONFIG[CHAIN_ID];
 
-export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
-  chainId,
-  className,
-  cardStyle,
-  showRewardsPreview = false,
-}: ChainCheckInCardBaseProps) {
-  const config = CHAIN_CONFIG[chainId];
-  const { status, isLoading, refetch: refetchStatus } = useCanCheckIn(chainId);
-  const { formatted, isLoading: isLoadingStats, refetch: refetchStats } = useUserStats(chainId);
+export const CeloCheckInCard = memo(function CeloCheckInCard() {
+  const { status, isLoading, refetch: refetchStatus } = useCanCheckIn(CHAIN_ID);
+  const { formatted, isLoading: isLoadingStats, refetch: refetchStats } = useUserStats(CHAIN_ID);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleCheckInSuccess = useCallback(() => {
@@ -36,12 +27,9 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
   }, [refetchStatus, refetchStats]);
 
   return (
-    <div
-      className={cn("border p-3", className)}
-      style={cardStyle}
-    >
+    <div className="border p-3 bg-white border-yellow-300">
       {/* Top row: Logo + Stats */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-2">
         {/* Chain logo */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <Image
@@ -51,15 +39,6 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
             height={36}
             className="h-4 md:h-6 w-auto"
           />
-          {config.wordmark && (
-            <Image
-              src={config.wordmark}
-              alt={config.name}
-              width={120}
-              height={28}
-              className="h-4 md:h-6 w-auto hidden sm:block"
-            />
-          )}
         </div>
 
         {/* Stats: Current | Highest | All-Time */}
@@ -99,17 +78,17 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
 
       {/* Welcome message for new users */}
       {!isLoadingStats && formatted?.totalCheckIns === 0 && (
-        <p className="text-xs text-gray-500 text-center mb-3 italic">
+        <p className="text-xs text-gray-500 text-center mb-2 italic">
           Start your streak today!
         </p>
       )}
 
       {/* AutoClaim Rewards Preview */}
-      {showRewardsPreview && <RewardsPreview />}
+      <RewardsPreview chainId={CHAIN_ID} />
 
       {/* Action button */}
       <CheckInButton
-        chainId={chainId}
+        chainId={CHAIN_ID}
         canCheckIn={status?.canCheckIn ?? false}
         timeRemaining={status?.timeRemaining ?? 0n}
         onSuccess={handleCheckInSuccess}
@@ -127,6 +106,7 @@ export const ChainCheckInCardBase = memo(function ChainCheckInCardBase({
         isLoadingStats={isLoadingStats}
         chainName={config.name}
         accentColor={config.color}
+        chainId={CHAIN_ID}
       />
     </div>
   );

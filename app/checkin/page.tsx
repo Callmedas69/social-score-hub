@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { BaseCheckInCard, CooldownTimer } from "@/components/checkin";
+import { BaseCheckInCard, CeloCheckInCard } from "@/components/checkin";
 import { Navigation } from "@/components/layout/Navigation";
 
 export default function CheckInPage() {
@@ -12,8 +12,8 @@ export default function CheckInPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
-
-  const cardRef = useRef<HTMLDivElement>(null);
+  const baseCardRef = useRef<HTMLDivElement>(null);
+  const celoCardRef = useRef<HTMLDivElement>(null);
 
   // Prevent hydration mismatch - wait for client mount
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function CheckInPage() {
     if (!mounted || !containerRef.current) return;
 
     // Set initial states
-    gsap.set([titleRef.current, taglineRef.current, cardRef.current], {
+    gsap.set([titleRef.current, taglineRef.current, baseCardRef.current, celoCardRef.current], {
       opacity: 0,
       y: 30,
     });
@@ -48,14 +48,21 @@ export default function CheckInPage() {
       ease: "power3.out",
     }, 0.15);
 
-
-    // Card slide up
-    tl.to(cardRef.current, {
+    // Base card slide up
+    tl.to(baseCardRef.current, {
       opacity: 1,
       y: 0,
       duration: 0.6,
       ease: "power3.out",
     }, 0.45);
+
+    // Celo card slide up (staggered)
+    tl.to(celoCardRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power3.out",
+    }, 0.55);
 
   }, { scope: containerRef, dependencies: [mounted] });
 
@@ -104,8 +111,13 @@ export default function CheckInPage() {
 
 
       {/* Chain cards */}
-      <main ref={cardRef} className="flex-1 px-4 pb-20 space-y-3 pt-8">
-        <BaseCheckInCard />
+      <main className="flex-1 px-4 pb-20 space-y-3 pt-8">
+        <div ref={baseCardRef}>
+          <BaseCheckInCard />
+        </div>
+        <div ref={celoCardRef}>
+          <CeloCheckInCard />
+        </div>
       </main>
 
       <Navigation />

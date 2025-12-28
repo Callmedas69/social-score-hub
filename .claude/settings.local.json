@@ -45,7 +45,14 @@
       "mcp__context7__get-library-docs",
       "Bash(xargs cat:*)",
       "Bash(tree:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\GlobalStatsBar.tsx\")",
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\hooks\\\\useGlobalStats.ts\")",
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\app\\\\api\\\\stats\\\\global\\\\route.ts\")",
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\ChainCheckInCardBase.tsx\")",
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\BaseCheckInCard.tsx\")",
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\CeloCheckInCard.tsx\")"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { usePendingRewards } from "@/hooks/useRewards";
 import { useTokenMetadata } from "@/hooks/useTokenMetadata";
 import { formatTokenAmount, shortenAddress } from "@/lib/utils";
-import { DOMAIN_URL } from "@/config/constants";
+import { DOMAIN_URL, type SupportedChainId } from "@/config/constants";
 import type { FormattedUserStats } from "@/types";
 
 interface SuccessModalProps {
@@ -25,6 +26,7 @@ interface SuccessModalProps {
   isLoadingStats?: boolean;
   chainName: string;
   accentColor: string;
+  chainId: SupportedChainId;
 }
 
 export const SuccessModal = memo(function SuccessModal({
@@ -34,14 +36,15 @@ export const SuccessModal = memo(function SuccessModal({
   isLoadingStats = false,
   chainName,
   accentColor,
+  chainId,
 }: SuccessModalProps) {
   const { address } = useAccount();
   const [isSharing, setIsSharing] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const { rewards } = usePendingRewards();
+  const { rewards } = usePendingRewards(chainId);
   const tokenAddresses = useMemo(() => rewards.map((r) => r.token), [rewards]);
-  const { metadataMap } = useTokenMetadata(tokenAddresses);
+  const { metadataMap } = useTokenMetadata(tokenAddresses, chainId);
 
   const handleShare = useCallback(async () => {
     setIsSharing(true);
@@ -81,38 +84,34 @@ export const SuccessModal = memo(function SuccessModal({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent
-        className="max-w-sm border-2 p-6 rounded-none"
+        className="border-2 p-4 rounded-none max-w-[90vw]"
         style={{ borderColor: accentColor }}
         showCloseButton={false}
       >
         <DialogHeader className="text-center">
-          <DialogTitle className="text-2xl font-display tracking-tight">
-            GM! {chainName} morning!
+          <DialogTitle className="text-2xl font-bold tracking-tight">
+            Hello {chainName}!
           </DialogTitle>
-          <p className="text-sm text-gray-500 mt-1">
-            Check-in successful
-          </p>
         </DialogHeader>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-3 gap-4 py-4 border-y border-gray-200">
+        <div className="grid grid-cols-3 gap-4 py-3 border-y border-gray-200">
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Flame className="w-4 h-4 text-orange-500" />
-            </div>
-            <div className="text-2xl font-bold" style={{ color: accentColor }}>
+            
+            <div className="text-2xl font-bold text-gray-900">
               {isLoadingStats ? (
                 <Skeleton className="w-8 h-7 mx-auto" />
               ) : (
                 stats?.currentStreak ?? 0
               )}
             </div>
-            <div className="text-xs text-gray-500">Current Streak</div>
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <div className="text-[10px] text-gray-500">Current Streak</div>
+              <div><Flame className="w-3 h-3 text-orange-500" /></div>
+            </div>
           </div>
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Trophy className="w-4 h-4 text-yellow-500" />
-            </div>
+            
             <div className="text-2xl font-bold text-gray-700">
               {isLoadingStats ? (
                 <Skeleton className="w-8 h-7 mx-auto" />
@@ -120,12 +119,13 @@ export const SuccessModal = memo(function SuccessModal({
                 stats?.longestStreak ?? 0
               )}
             </div>
-            <div className="text-xs text-gray-500">Longest</div>
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <div className="text-[10px] text-gray-500">Longest</div>
+              <Trophy className="w-3 h-3 text-yellow-500" />
+            </div>
           </div>
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Calendar className="w-4 h-4 text-blue-500" />
-            </div>
+            
             <div className="text-2xl font-bold text-gray-700">
               {isLoadingStats ? (
                 <Skeleton className="w-8 h-7 mx-auto" />
@@ -133,14 +133,16 @@ export const SuccessModal = memo(function SuccessModal({
                 stats?.totalCheckIns ?? 0
               )}
             </div>
-            <div className="text-xs text-gray-500">All-Time</div>
+            <div className="flex items-center justify-center gap-1 mb-1">
+            <div className="text-[10px] text-gray-500">All-Time</div>
+            <Calendar className="w-3 h-3 text-blue-500" /></div>
           </div>
         </div>
 
         {/* Rewards Section */}
         {rewards.length > 0 && (
-          <div className="py-3">
-            <p className="text-xs text-gray-500 mb-2 text-center">
+          <div className="py-2">
+            <p className="text-[10px] text-gray-500 mb-1 text-center italic">
               Rewards earned
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -153,12 +155,13 @@ export const SuccessModal = memo(function SuccessModal({
                   metadata?.symbol || shortenAddress(reward.token);
 
                 return (
-                  <span
+                  <Badge
                     key={reward.token}
-                    className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-green-700 bg-green-100 border border-green-200"
+                    variant="outline"
+                    className="text-green-700 bg-green-100 border-green-200 text-[7px]"
                   >
                     +{displayAmount} {displaySymbol}
-                  </span>
+                  </Badge>
                 );
               })}
             </div>
@@ -166,7 +169,7 @@ export const SuccessModal = memo(function SuccessModal({
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-3 mt-2">
+        <div className="flex gap-2">
           <Button
             onClick={handleShare}
             disabled={isSharing}
@@ -187,7 +190,7 @@ export const SuccessModal = memo(function SuccessModal({
           </Button>
           <Button
             onClick={onClose}
-            className="flex-1 text-white rounded-none"
+            className="flex-1 text-gray-900 rounded-none"
             style={{ backgroundColor: accentColor }}
           >
             Done

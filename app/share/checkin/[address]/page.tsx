@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import { DOMAIN_URL } from "@/config/constants";
+import { RedirectToCheckin } from "./redirect-client";
 
 interface PageProps {
   params: Promise<{ address: string }>;
@@ -25,6 +25,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ShareCheckinPage() {
-  redirect("/checkin");
+export default function ShareCheckinPage() {
+  return <RedirectToCheckin />;
 }

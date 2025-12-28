@@ -1,31 +1,15 @@
-✓ Compiled in 132ms
-⨯ Error: failed to pipe response
-    at ignore-listed frames {
-  [cause]: Error: Expected <div> to have explicit "display: flex" or "display: none" if it has more than one child node.
-      at qt.next (<anonymous>)
-}
- GET /api/og/checkin?address=0x168D8b4f50BB3aA67D05a6937B643004257118ED 500 in 4.7s (compile: 2.8s, render: 1911ms)
-⨯ Error: failed to pipe response
-    at ignore-listed frames {
-  [cause]: Error: Expected <div> to have explicit "display: flex" or "display: none" if it has more than one child node.
-      at qt.next (<anonymous>)
-}
- GET /api/og/checkin?address=0x168D8b4f50BB3aA67D05a6937B643004257118ED 500 in 553ms (compile: 10ms, render: 543ms)
-⨯ Error: failed to pipe response
-    at ignore-listed frames {
-  [cause]: Error: Expected <div> to have explicit "display: flex" or "display: none" if it has more than one child node.
-      at qt.next (<anonymous>)
-}
- GET /api/og/checkin?address=0x168D8b4f50BB3aA67D05a6937B643004257118ED 500 in 488ms (compile: 3ms, render: 486ms)
-⨯ Error: failed to pipe response
-    at ignore-listed frames {
-  [cause]: Error: Expected <div> to have explicit "display: flex" or "display: none" if it has more than one child node.
-      at qt.next (<anonymous>)
-}
- GET /api/og/checkin?address=0x168D8b4f50BB3aA67D05a6937B643004257118ED 500 in 531ms (compile: 8ms, render: 523ms)
-⨯ Error: failed to pipe response
-    at ignore-listed frames {
-  [cause]: Error: Expected <div> to have explicit "display: flex" or "display: none" if it has more than one child node.
-      at qt.next (<anonymous>)
-}
- GET /api/og/checkin?address=0x168D8b4f50BB3aA67D05a6937B643004257118ED 500 in 699ms (
+ POST /api/rpc/base 200 in 2.4s (compile: 140ms, render: 2.3s)
+Failed to fetch logs for celo: Error: Under the Free tier plan, you can make eth_getLogs requests with up to a 10 block range. Based on your parameters, this block range should work: [0x0, 0x9]. Upgrade to PAYG for expanded block range.
+    at rpcCall (app\api\stats\global\route.ts:53:11)
+    at async fetchEventLogs (app\api\stats\global\route.ts:70:19)
+    at async fetchChainStats (app\api\stats\global\route.ts:134:39)
+    at async GET (app\api\stats\global\route.ts:159:36)
+  51 |   const data = await response.json();
+  52 |   if (data.error) {
+> 53 |     throw new Error(data.error.message || "RPC error");
+     |           ^
+  54 |   }
+  55 |   return data.result;
+  56 | }
+ GET /api/stats/global 200 in 3.4s (compile: 954ms, render: 2.4s)
+ POST /api/rpc/celo 200 in 1348ms (compile: 586ms, render: 762ms)

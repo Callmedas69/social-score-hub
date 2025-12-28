@@ -1,5 +1,5 @@
 import { useReadContract } from "wagmi";
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/config/constants";
+import { CHECKIN_ADDRESSES, CONTRACT_ABI, type SupportedChainId } from "@/config/constants";
 
 export interface DailyClaimStats {
   cap: bigint;
@@ -9,11 +9,14 @@ export interface DailyClaimStats {
   isUnlimited: boolean;
 }
 
-export function useDailyClaimStats() {
+export function useDailyClaimStats(chainId: SupportedChainId) {
+  const contractAddress = CHECKIN_ADDRESSES[chainId];
+
   const { data, isLoading, error, refetch } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress,
     abi: CONTRACT_ABI,
     functionName: "getDailyClaimStats",
+    chainId,
     query: {
       staleTime: 24 * 60 * 60 * 1000, // 24 hours - matches contract check-in period
     },

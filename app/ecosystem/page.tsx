@@ -81,6 +81,30 @@ const ecosystemApps = [
     url: "https://farcaster.xyz/miniapps/ezh8_w0EM4h2/farmer",
     logo: "/ecosystem/farmer.png",
   },
+  {
+    name: "Talent Protocol",
+    description: "Start building, increase your reputation and earn rewards",
+    url: "https://talent.app/",
+    logo: "/score_provider/Talent_Protocol.jpg",
+  },
+  {
+    name: "Gitcoin Passport",
+    description: "Collect Stamps, build your Unique Humanity Score of 20+, and access the internet built for humans.",
+    url: "https://app.passport.xyz/",
+    logo: "/score_provider/human_paspport.jpg",
+  },
+  {
+    name: "Ethos Network",
+    description: "Ethos is a credibility platform that creates a more trusted web3 ecosystem.",
+    url: "https://ethos.network",
+    logo: "/score_provider/ethos_logo.png",
+  },
+  {
+    name: "Quotient",
+    description: "Social reputation leaderboard for Farcaster",
+    url: "https://farcaster.xyz/miniapps/tqsdJuGiDUXR/leaderboard-by-quotient",
+    logo: "/score_provider/Quotient.png",
+  },
 ];
 
 export default function EcosystemPage() {

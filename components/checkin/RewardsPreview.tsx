@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, memo, useEffect, useRef } from "react";
+import { useState, useMemo, memo } from "react";
 import { ChevronDown, Gift } from "lucide-react";
 import {
   Collapsible,
@@ -12,27 +12,24 @@ import { useDailyClaimStats } from "@/hooks/useDailyClaimStats";
 import { useTokenMetadata } from "@/hooks/useTokenMetadata";
 import { formatTokenAmount, shortenAddress } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import type { SupportedChainId } from "@/config/constants";
 
-export const RewardsPreview = memo(function RewardsPreview() {
+interface RewardsPreviewProps {
+  chainId: SupportedChainId;
+}
+
+export const RewardsPreview = memo(function RewardsPreview({ chainId }: RewardsPreviewProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const hasAutoOpened = useRef(false);
-  const { rewards, isLoading } = usePendingRewards();
-  const { stats: dailyStats, isLoading: loadingStats } = useDailyClaimStats();
+  const { rewards, isLoading } = usePendingRewards(chainId);
+  const { stats: dailyStats, isLoading: loadingStats } = useDailyClaimStats(chainId);
   const tokenAddresses = useMemo(() => rewards.map((r) => r.token), [rewards]);
-  const { metadataMap } = useTokenMetadata(tokenAddresses);
+  const { metadataMap } = useTokenMetadata(tokenAddresses, chainId);
 
   const hasRewards = rewards.length > 0;
   const isCapReached = dailyStats?.isCapReached ?? false;
   const isUnlimited = dailyStats?.isUnlimited ?? true;
   const isAvailable = hasRewards && !isCapReached;
-
-  // Auto-open when rewards are available (only once after data loads)
-  useEffect(() => {
-    if (!isLoading && !loadingStats && isAvailable && !hasAutoOpened.current) {
-      setIsOpen(true);
-      hasAutoOpened.current = true;
-    }
-  }, [isLoading, loadingStats, isAvailable]);
 
   if (isLoading || loadingStats) {
     return (
@@ -114,12 +111,13 @@ export const RewardsPreview = memo(function RewardsPreview() {
                 metadata?.symbol || shortenAddress(reward.token);
 
               return (
-                <span
+                <Badge
                   key={reward.token}
-                  className="inline-flex items-center px-2 py-1 text-sm font-medium text-green-700 bg-green-100 border border-green-200"
+                  variant="outline"
+                  className="text-green-700 bg-green-100 border-green-200 text-[7px]"
                 >
                   +{displayAmount} {displaySymbol}
-                </span>
+                </Badge>
               );
             })}
           </div>

@@ -1,17 +1,17 @@
 import { useMemo } from "react";
 import { useReadContracts } from "wagmi";
-import { ERC20_ABI } from "@/config/constants";
+import { ERC20_ABI, type SupportedChainId } from "@/config/constants";
 import type { TokenMetadata } from "@/types";
 
-export function useTokenMetadata(tokenAddresses: `0x${string}`[]) {
+export function useTokenMetadata(tokenAddresses: `0x${string}`[], chainId?: SupportedChainId) {
   const contracts = useMemo(
     () =>
       tokenAddresses.flatMap((address) => [
-        { address, abi: ERC20_ABI, functionName: "name" as const },
-        { address, abi: ERC20_ABI, functionName: "symbol" as const },
-        { address, abi: ERC20_ABI, functionName: "decimals" as const },
+        { address, abi: ERC20_ABI, functionName: "name" as const, chainId },
+        { address, abi: ERC20_ABI, functionName: "symbol" as const, chainId },
+        { address, abi: ERC20_ABI, functionName: "decimals" as const, chainId },
       ]),
-    [tokenAddresses]
+    [tokenAddresses, chainId]
   );
 
   const { data, isLoading, error } = useReadContracts({

@@ -1,13 +1,14 @@
-import { base } from "wagmi/chains";
-import { HELLOONCHAIN_ADDRESS, HELLOONCHAIN_ABI } from "@/abi/HelloOnchain";
+import { base, celo } from "wagmi/chains";
+import { HELLOONCHAIN_ADDRESS, HELLOONCHAIN_ADDRESS_CELO, HELLOONCHAIN_ABI } from "@/abi/HelloOnchain";
 
 // Supported chains
-export const SUPPORTED_CHAINS = [base] as const;
+export const SUPPORTED_CHAINS = [base, celo] as const;
 export type SupportedChainId = (typeof SUPPORTED_CHAINS)[number]["id"];
 
 // Contract addresses per chain
 export const CHECKIN_ADDRESSES: Record<SupportedChainId, `0x${string}`> = {
   [base.id]: HELLOONCHAIN_ADDRESS,
+  [celo.id]: HELLOONCHAIN_ADDRESS_CELO,
 };
 
 // Chain display configuration (brand colors from .docs/brand_color.md)
@@ -21,6 +22,11 @@ export const CHAIN_CONFIG: Record<SupportedChainId, {
     name: "Base",
     color: "#0000FF",
     logo: "/chains/Base_lockup_2color.svg"
+  },
+  [celo.id]: {
+    name: "Celo",
+    color: "#FCFF52",
+    logo: "/chains/Celo_Wordmark_RGB_Onyx.svg"
   },
 };
 
@@ -38,6 +44,7 @@ export const SSA_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_SSA_INDEX as `0x${st
 // RPC Configuration (server-side only)
 export const ALCHEMY_RPC_URLS: Record<SupportedChainId, string> = {
   [base.id]: `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+  [celo.id]: `https://celo-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
 };
 
 // Minimal ERC20 ABI for token metadata

@@ -1,11 +1,13 @@
 "use client";
 
+import { base } from "wagmi/chains";
 import { usePendingRewards } from "@/hooks/useRewards";
 import { useTokenMetadata } from "@/hooks/useTokenMetadata";
 import { formatTokenAmount, shortenAddress } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { RewardToken } from "@/types";
+import type { SupportedChainId } from "@/config/constants";
 
 function PendingRewardItem({
   reward,
@@ -42,11 +44,15 @@ function PendingRewardItem({
   );
 }
 
-export function PendingRewards() {
-  const { rewards, isLoading, error } = usePendingRewards();
+interface PendingRewardsProps {
+  chainId?: SupportedChainId;
+}
+
+export function PendingRewards({ chainId = base.id }: PendingRewardsProps) {
+  const { rewards, isLoading, error } = usePendingRewards(chainId);
   const tokenAddresses = rewards.map((r) => r.token);
   const { metadataMap, isLoading: loadingMetadata } =
-    useTokenMetadata(tokenAddresses);
+    useTokenMetadata(tokenAddresses, chainId);
 
   if (isLoading || loadingMetadata) {
     return (
