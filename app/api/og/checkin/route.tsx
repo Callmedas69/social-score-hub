@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
           backgroundColor: "#ffffff",
           paddingTop: "20px",
           paddingBottom: "40px",
-          paddingLeft: "100px",
+          paddingLeft: "120px",
           paddingRight: "100px",
         }}
       >
