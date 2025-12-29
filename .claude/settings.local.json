@@ -55,7 +55,8 @@
       "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\CeloCheckInCard.tsx\")",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:docs.celo.org)",
-      "WebFetch(domain:celoscan.io)"
+      "WebFetch(domain:celoscan.io)",
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\app\\\\share\\\\checkin\\\\layout.tsx\")"
     ]
   },
   "enableAllProjectMcpServers": true,

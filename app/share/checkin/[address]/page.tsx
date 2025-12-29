@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { DOMAIN_URL } from "@/config/constants";
+import { APP_NAME, DOMAIN_URL } from "@/config/constants";
 import { RedirectToCheckin } from "./redirect-client";
 
 interface PageProps {
@@ -9,6 +9,22 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { address } = await params;
   const ogImageUrl = `${DOMAIN_URL}/api/og/checkin?address=${address}`;
+
+  // Dynamic miniapp embed with same image as OG
+  const checkinMiniAppEmbed = {
+    version: "1",
+    imageUrl: ogImageUrl,
+    button: {
+      title: "Hello Onchain",
+      action: {
+        type: "launch_miniapp",
+        name: APP_NAME,
+        url: `${DOMAIN_URL}/checkin`,
+        splashImageUrl: `${DOMAIN_URL}/splash.png`,
+        splashBackgroundColor: "#FFFFFF",
+      },
+    },
+  };
 
   return {
     title: "Hello Onchain - Daily Check-in",
@@ -21,6 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     twitter: {
       card: "summary_large_image",
       images: [ogImageUrl],
+    },
+    other: {
+      "fc:miniapp": JSON.stringify(checkinMiniAppEmbed),
     },
   };
 }

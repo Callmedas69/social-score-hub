@@ -23,7 +23,7 @@ const miniAppEmbed = {
   button: {
     title: "Your Signals",
     action: {
-      type: "launch_frame",
+      type: "launch_miniapp",
       name: APP_NAME,
       url: DOMAIN_URL,
       splashImageUrl: `${DOMAIN_URL}/splash.png`,

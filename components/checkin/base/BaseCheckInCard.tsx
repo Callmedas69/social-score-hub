@@ -18,7 +18,7 @@ const config = CHAIN_CONFIG[CHAIN_ID];
 export const BaseCheckInCard = memo(function BaseCheckInCard() {
   const { status, isLoading, refetch: refetchStatus } = useCanCheckIn(CHAIN_ID);
   const { formatted, isLoading: isLoadingStats, refetch: refetchStats } = useUserStats(CHAIN_ID);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(true);
 
   const handleCheckInSuccess = useCallback(() => {
     refetchStatus();
