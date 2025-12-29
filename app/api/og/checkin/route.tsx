@@ -91,8 +91,8 @@ export async function GET(request: NextRequest) {
           backgroundColor: "#ffffff",
           paddingTop: "20px",
           paddingBottom: "40px",
-          paddingLeft: "50px",
-          paddingRight: "50px",
+          paddingLeft: "100px",
+          paddingRight: "100px",
         }}
       >
         {/* Header */}
@@ -130,8 +130,8 @@ export async function GET(request: NextRequest) {
           <div
             style={{
               display: "flex",
-              width: "250px",
-              height: "250px",
+              width: "200px",
+              height: "200px",
               overflow: "hidden",
               backgroundColor: "#e8e8ff",
               border: "1px solid #0000FF",
@@ -140,8 +140,8 @@ export async function GET(request: NextRequest) {
             {pfpUrl ? (
               <img
                 src={pfpUrl}
-                width={250}
-                height={250}
+                width={200}
+                height={200}
                 style={{ objectFit: "cover" }}
               />
             ) : (
@@ -173,7 +173,7 @@ export async function GET(request: NextRequest) {
               style={{
                 display: "flex",
                 alignItems: "center",
-                fontSize: "48px",
+                fontSize: "36px",
                 fontWeight: 700,
                 fontFamily: "InterTight",
                 color: "#0000FF",
