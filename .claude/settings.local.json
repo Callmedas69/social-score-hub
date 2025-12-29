@@ -52,7 +52,10 @@
       "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\app\\\\api\\\\stats\\\\global\\\\route.ts\")",
       "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\ChainCheckInCardBase.tsx\")",
       "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\BaseCheckInCard.tsx\")",
-      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\CeloCheckInCard.tsx\")"
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\components\\\\checkin\\\\CeloCheckInCard.tsx\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.celo.org)",
+      "WebFetch(domain:celoscan.io)"
     ]
   },
   "enableAllProjectMcpServers": true,

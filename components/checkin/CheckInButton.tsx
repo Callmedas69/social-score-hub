@@ -57,6 +57,7 @@ interface CheckInButtonProps {
   accentColor?: string;
   chainName?: string;
   isLoading?: boolean;
+  textColor?: string;
 }
 
 export function CheckInButton({
@@ -68,6 +69,7 @@ export function CheckInButton({
   accentColor = "#000",
   chainName = "Chain",
   isLoading = false,
+  textColor = "text-white",
 }: CheckInButtonProps) {
   const { chain } = useAccount();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
@@ -169,7 +171,7 @@ export function CheckInButton({
     return (
       <button
         disabled
-        className="w-full h-11 text-white font-display flex items-center justify-center"
+        className={`w-full h-11 ${textColor} font-display flex items-center justify-center`}
         style={bgStyle}
       >
         {chainName} morning
@@ -183,7 +185,7 @@ export function CheckInButton({
     return (
       <button
         disabled
-        className="w-full h-11 text-white opacity-70 font-display"
+        className={`w-full h-11 ${textColor} opacity-70 font-display`}
         style={bgStyle}
       >
         {isPending ? "Confirm..." : "Processing..."}
@@ -218,7 +220,7 @@ export function CheckInButton({
       <div className="w-full">
         <button
           onClick={() => handleClick("checkIn")}
-          className="w-full h-11 text-white font-display uppercase transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          className={`w-full h-11 ${textColor} font-display uppercase transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]`}
           style={checkInButtonStyle}
         >
           Hello {chainName}

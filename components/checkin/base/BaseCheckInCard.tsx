@@ -8,7 +8,7 @@ import { RewardsPreview } from "../RewardsPreview";
 import { SuccessModal } from "../SuccessModal";
 import { useCanCheckIn } from "@/hooks/useCanCheckIn";
 import { useUserStats } from "@/hooks/useUserStats";
-import { CHAIN_CONFIG } from "@/config/constants";
+import { CHAIN_CONFIG, CHECKIN_ADDRESSES } from "@/config/constants";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Base chain configuration
@@ -108,6 +108,21 @@ export const BaseCheckInCard = memo(function BaseCheckInCard() {
         accentColor={config.color}
         chainId={CHAIN_ID}
       />
+
+      {/* Footer: Contract & Gas Info */}
+      <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
+        <a
+          href={`https://basescan.org/address/${CHECKIN_ADDRESSES[CHAIN_ID]}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[8px] text-gray-400 hover:text-gray-600 font-mono"
+        >
+          {CHECKIN_ADDRESSES[CHAIN_ID].slice(0, 6)}...{CHECKIN_ADDRESSES[CHAIN_ID].slice(-4)}
+        </a>
+        <span className="text-[8px] text-gray-400">
+          Gas: ETH
+        </span>
+      </div>
     </div>
   );
 });
