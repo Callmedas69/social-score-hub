@@ -4,7 +4,8 @@ import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import sdk from "@farcaster/miniapp-sdk";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { BaseCheckInCard, CeloCheckInCard } from "@/components/checkin";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BaseCheckInCard, CeloCheckInCard, NFTMintCard } from "@/components/checkin";
 import { Navigation } from "@/components/layout/Navigation";
 
 export default function CheckInPage() {
@@ -13,8 +14,7 @@ export default function CheckInPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
-  const baseCardRef = useRef<HTMLDivElement>(null);
-  const celoCardRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
 
   // Prevent hydration mismatch - wait for client mount
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function CheckInPage() {
     if (!mounted || !containerRef.current) return;
 
     // Set initial states
-    gsap.set([titleRef.current, taglineRef.current, baseCardRef.current, celoCardRef.current], {
+    gsap.set([titleRef.current, taglineRef.current, tabsRef.current], {
       opacity: 0,
       y: 30,
     });
@@ -61,21 +61,13 @@ export default function CheckInPage() {
       ease: "power3.out",
     }, 0.15);
 
-    // Base card slide up
-    tl.to(baseCardRef.current, {
+    // Tabs section slide up
+    tl.to(tabsRef.current, {
       opacity: 1,
       y: 0,
       duration: 0.6,
       ease: "power3.out",
-    }, 0.45);
-
-    // Celo card slide up (staggered)
-    tl.to(celoCardRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: "power3.out",
-    }, 0.55);
+    }, 0.35);
 
   }, { scope: containerRef, dependencies: [mounted] });
 
@@ -123,13 +115,29 @@ export default function CheckInPage() {
       </header>
 
 
-      {/* Chain cards */}
-      <main className="flex-1 px-4 pb-20 space-y-3 pt-8">
-        <div ref={baseCardRef}>
-          <BaseCheckInCard />
-        </div>
-        <div ref={celoCardRef}>
-          <CeloCheckInCard />
+      {/* Chain tabs */}
+      <main className="flex-1 px-4 pb-20 pt-6">
+        <div ref={tabsRef}>
+          <Tabs defaultValue="base" className="w-full">
+            <TabsList className="w-full grid grid-cols-2 mb-4">
+              <TabsTrigger value="base" className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-500" />
+                Base
+              </TabsTrigger>
+              <TabsTrigger value="celo" className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-yellow-400" />
+                Celo
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="base" className="space-y-3">
+              <BaseCheckInCard />
+              <NFTMintCard />
+            </TabsContent>
+            <TabsContent value="celo">
+              <CeloCheckInCard />
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
 

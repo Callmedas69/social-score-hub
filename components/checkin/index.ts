@@ -1,5 +1,5 @@
 // Chain-specific components
-export { BaseCheckInCard } from "./base";
+export { BaseCheckInCard, NFTMintCard } from "./base";
 export { CeloCheckInCard } from "./celo";
 
 // Shared components
