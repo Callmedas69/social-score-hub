@@ -137,7 +137,7 @@ export function NFTMintButton({
   };
 
 
-  const accentColor = "#0052FF"; // Base blue
+  const accentColor = "#0000FF"; // Base blue (matches CHAIN_CONFIG)
 
   // Loading state
   if (isLoading) {

@@ -59,7 +59,7 @@ export const NFTSuccessModal = memo(function NFTSuccessModal({
     setIsSharing(false);
   }, [address]);
 
-  const accentColor = "#0052FF"; // Base blue
+  const accentColor = "#0000FF"; // Base blue (matches CHAIN_CONFIG)
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
