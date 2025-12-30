@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
+import sdk from "@farcaster/miniapp-sdk";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { BaseCheckInCard, CeloCheckInCard } from "@/components/checkin";
 import { Navigation } from "@/components/layout/Navigation";
@@ -18,6 +19,18 @@ export default function CheckInPage() {
   // Prevent hydration mismatch - wait for client mount
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Signal Farcaster that the app is ready (dismiss splash screen)
+  useEffect(() => {
+    const initReady = async () => {
+      try {
+        await sdk.actions.ready();
+      } catch (error) {
+        // Not in Farcaster Mini App context
+      }
+    };
+    initReady();
   }, []);
 
   useGSAP(() => {
