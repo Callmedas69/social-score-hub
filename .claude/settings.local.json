@@ -56,7 +56,8 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:docs.celo.org)",
       "WebFetch(domain:celoscan.io)",
-      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\app\\\\share\\\\checkin\\\\layout.tsx\")"
+      "Bash(del \"D:\\\\Harry\\\\BasedNouns\\\\CodeProject\\\\checkin_front\\\\app\\\\share\\\\checkin\\\\layout.tsx\")",
+      "mcp__ide__getDiagnostics"
     ]
   },
   "enableAllProjectMcpServers": true,

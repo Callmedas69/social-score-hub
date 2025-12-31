@@ -56,7 +56,7 @@ interface NFTMintButtonProps {
   canMint: boolean;
   timeRemaining: bigint;
   mintPrice?: bigint;
-  onSuccess?: () => void;
+  onSuccess?: () => void | Promise<void>;
   onCooldownComplete?: () => void;
   isLoading?: boolean;
 }
@@ -117,14 +117,26 @@ export function NFTMintButton({
   useEffect(() => {
     if (isSuccess) {
       setJustMinted(true);
-      onSuccessRef.current?.();
+
+      // Trigger haptic feedback for Farcaster mini app
       try {
         sdk.haptics.notificationOccurred("success");
       } catch {
         // Silently fail if not in Farcaster context
       }
-      const timer = setTimeout(() => reset(), 2000);
-      return () => clearTimeout(timer);
+
+      // Wait for refetch to complete before resetting
+      const handleSuccess = async () => {
+        // Trigger refetch and wait for it to complete
+        await onSuccessRef.current?.();
+
+        // Minimum 2 seconds display time for success state
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        reset();
+      };
+
+      handleSuccess();
     }
   }, [isSuccess, reset]);
 

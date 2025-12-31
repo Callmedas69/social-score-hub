@@ -11,8 +11,8 @@ export const NFTMintCard = memo(function NFTMintCard() {
     useNFTStatus();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const handleMintSuccess = useCallback(() => {
-    refetch();
+  const handleMintSuccess = useCallback(async () => {
+    await refetch();
     setShowSuccessModal(true);
   }, [refetch]);
 

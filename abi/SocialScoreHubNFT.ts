@@ -1,4 +1,4 @@
-export const SOCIAL_SCORE_HUB_NFT_ADDRESS = "0x06F0649C5b39769c1aB2aDD5E88FdC8d1Ffa8157" as const;
+export const SOCIAL_SCORE_HUB_NFT_ADDRESS = "0x326090391f64Ab3a86Ba7798de6002940d26c136" as const;
 
 export const SOCIAL_SCORE_HUB_NFT_ABI = [
   {
@@ -119,6 +119,19 @@ export const SOCIAL_SCORE_HUB_NFT_ABI = [
     inputs: [],
     outputs: [],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "royaltyInfo",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "salePrice", type: "uint256" },
+    ],
+    outputs: [
+      { name: "receiver", type: "address" },
+      { name: "royaltyAmount", type: "uint256" },
+    ],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -312,5 +325,6 @@ export const SOCIAL_SCORE_HUB_NFT_ABI = [
   { type: "error", name: "OwnableInvalidOwner", inputs: [{ name: "owner", type: "address" }] },
   { type: "error", name: "OwnableUnauthorizedAccount", inputs: [{ name: "account", type: "address" }] },
   { type: "error", name: "ReentrancyGuardReentrantCall", inputs: [] },
+  { type: "error", name: "RefundFailed", inputs: [] },
   { type: "error", name: "WithdrawFailed", inputs: [] },
 ] as const;

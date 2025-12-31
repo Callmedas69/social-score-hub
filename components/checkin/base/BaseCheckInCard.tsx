@@ -20,9 +20,8 @@ export const BaseCheckInCard = memo(function BaseCheckInCard() {
   const { formatted, isLoading: isLoadingStats, refetch: refetchStats } = useUserStats(CHAIN_ID);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const handleCheckInSuccess = useCallback(() => {
-    refetchStatus();
-    refetchStats();
+  const handleCheckInSuccess = useCallback(async () => {
+    await Promise.all([refetchStatus(), refetchStats()]);
     setShowSuccessModal(true);
   }, [refetchStatus, refetchStats]);
 
