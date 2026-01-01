@@ -119,6 +119,8 @@ export function CheckInButton({
   useEffect(() => {
     if (isSuccess) {
       setJustCheckedIn(true);
+      // Set countdown immediately using known cooldown duration (24 hours)
+      setRemaining(86400);
 
       // Trigger haptic feedback for Farcaster mini app
       try {

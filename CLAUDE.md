@@ -163,6 +163,257 @@ NFTs **MUST render correctly** on:
 
 ---
 
+## Frontend Engineering Rules (Critical)
+
+### Core Principles
+
+- Frontend code must be:
+  - Predictable
+  - Readable
+  - Maintainable
+- Favor **clarity over cleverness**
+- UX correctness is as important as smart contract correctness
+
+---
+
+### State Management
+
+- Use **local state by default**
+- Introduce global state **only when clearly justified**
+- Avoid:
+  - Deep prop drilling
+  - Over-engineered state machines
+- State must reflect **real on-chain / backend state**, not assumptions
+
+---
+
+### Data Fetching & Effects
+
+- Separate:
+  - Data fetching
+  - Rendering
+  - Side effects
+- Avoid:
+  - Fetching inside render logic
+  - Uncontrolled effects
+- Always handle:
+  - Loading
+  - Empty
+  - Error states
+
+---
+
+### UI & UX Discipline
+
+- UI must be:
+  - Responsive
+  - Accessible
+  - Keyboard-navigable where applicable
+- Never block the user without feedback
+- Always communicate:
+  - Loading
+  - Pending
+  - Success
+  - Failure
+- Prefer **explicit UI states** over silent behavior
+
+---
+
+### Error Handling
+
+- Never swallow errors
+- Errors must be:
+  - Logged (for developers)
+  - Explained (for users)
+- Error messages should be:
+  - Clear
+  - Actionable
+  - Non-technical for end users
+
+---
+
+### Performance & Rendering
+
+- Avoid unnecessary re-renders
+- Memoize **only when needed**
+- Do NOT prematurely optimize
+- Prefer:
+  - Simple component trees
+  - Flat layouts
+- Performance optimizations must be measurable and justified
+
+---
+
+### Component Design
+
+- Components should:
+  - Do one thing
+  - Have clear inputs and outputs
+- Avoid:
+  - God components
+  - Excessive abstraction
+- Extract components only when:
+  - Reuse is real
+  - Complexity is reduced
+
+---
+
+### Styling Rules
+
+- Use Tailwind CSS consistently
+- Avoid:
+  - Inline styles (unless justified)
+  - Mixed styling paradigms
+- Design must:
+  - Follow spacing and typography consistency
+  - Respect light/dark contrast
+- Visual polish matters — sloppy UI is a bug
+
+---
+
+### Accessibility (Non-Negotiable)
+
+- Respect:
+  - Color contrast
+  - Focus states
+  - Semantic HTML
+- Interactive elements must:
+  - Be reachable via keyboard
+  - Provide visible focus feedback
+
+---
+
+### Environment & Configuration
+
+- Never hardcode:
+  - URLs
+  - Chain IDs
+  - Contract addresses
+- Use environment variables explicitly
+- Fail fast when configuration is missing or invalid
+
+---
+
+### Security Boundary (Frontend)
+
+- Frontend is **untrusted by default**
+- Never rely on frontend for:
+  - Authorization
+  - Validation
+  - Security guarantees
+- Treat all user input as hostile
+
+---
+
+### Code Quality
+
+- Code must be:
+  - Linted
+  - Typed
+  - Self-explanatory
+- Prefer explicit types over inferred magic
+- Remove dead code immediately
+
+---
+
+### Final Frontend Rule
+
+> **If the UI can mislead a user, it is a bug.**
+
+Clarity, feedback, and correctness are mandatory.
+
+---
+
+## Smart Contract ↔ Frontend Integration Rules
+
+### ABI-Driven Integration (Mandatory)
+
+- Frontend **MUST strictly follow the deployed contract ABI**
+- Never guess or infer:
+  - Function names
+  - Arguments
+  - Return values
+  - Visibility (`view`, `pure`, `payable`, `nonpayable`)
+- All frontend interactions must be derived from:
+  - Verified ABI
+  - Verified contract source code
+
+---
+
+### No Assumptions Policy
+
+- **Do NOT assume**:
+  - Token decimals
+  - Mint price
+  - Max supply
+  - Ownership or admin privileges
+  - Pause / unpause state
+- Always read values from the contract when available.
+
+---
+
+### wagmi Usage Rules
+
+- Use wagmi hooks as intended:
+  - `useReadContract` for reads
+  - `useWriteContract` for writes
+- Do NOT wrap wagmi in unnecessary abstractions.
+- Avoid custom hook layers unless explicitly justified.
+- Wallet UX must remain native (sign → confirm → reject).
+
+---
+
+### Transaction & UX Safety
+
+- Frontend must handle:
+  - Loading states
+  - Pending transactions
+  - Reverts and user rejections
+- Never assume:
+  - A transaction will succeed
+  - A wallet is connected
+  - A user has sufficient balance
+- Always surface clear, user-friendly errors.
+
+---
+
+### Payable & Value Handling
+
+- If a function is `payable`:
+  - Explicitly set `value`
+  - Never hardcode ETH amounts without justification
+- If a function is `nonpayable`:
+  - **Never send ETH**
+
+---
+
+### Events & State Sync
+
+- Prefer **contract events** for frontend state updates when available.
+- Do NOT rely solely on transaction receipts if events exist.
+- Event parameters must be mapped explicitly and correctly.
+
+---
+
+### Network Safety
+
+- Frontend must verify:
+  - Correct chain ID (Base)
+- Prevent interactions on the wrong network.
+- Never auto-switch networks without explicit user intent.
+
+---
+
+### Security Boundary
+
+- Assume frontend is **untrusted**
+- All critical validation must live **on-chain**
+- Never expose:
+  - Private keys
+  - Signer internals
+  - Admin-only logic in the UI
+
+
 ## Output Expectations
 
 When delivering solutions:

@@ -1,4 +1,11 @@
-export const SOCIAL_SCORE_HUB_NFT_ADDRESS = "0x326090391f64Ab3a86Ba7798de6002940d26c136" as const;
+// Contract addresses by chain
+export const SOCIAL_SCORE_HUB_NFT_ADDRESSES = {
+  base: "0x058AEfe4CBB6049eD9dbaD62E9F73F6A3300C1A8",
+  celo: "0x9F46DD5E1c1258Ca98b56cCE13A8D33b201D4622",
+} as const;
+
+// Default export for Base (primary chain)
+export const SOCIAL_SCORE_HUB_NFT_ADDRESS = SOCIAL_SCORE_HUB_NFT_ADDRESSES.base;
 
 export const SOCIAL_SCORE_HUB_NFT_ABI = [
   {

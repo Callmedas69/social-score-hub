@@ -1,17 +1,17 @@
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
 import { base } from "wagmi/chains";
-import {
-  SOCIAL_SCORE_HUB_NFT_ADDRESS,
-  SOCIAL_SCORE_HUB_NFT_ABI,
-} from "@/abi/SocialScoreHubNFT";
+import { SOCIAL_SCORE_HUB_NFT_ABI } from "@/abi/SocialScoreHubNFT";
+import { NFT_ADDRESSES, SupportedChainId } from "@/config/constants";
 
-export function useNFTMint() {
+export function useNFTMint(chainId: SupportedChainId = base.id) {
+  const contractAddress = NFT_ADDRESSES[chainId];
+
   // Read mint price from contract
   const { data: mintPrice } = useReadContract({
-    address: SOCIAL_SCORE_HUB_NFT_ADDRESS,
+    address: contractAddress,
     abi: SOCIAL_SCORE_HUB_NFT_ABI,
     functionName: "MINT_PRICE",
-    chainId: base.id,
+    chainId,
   });
 
   const {
@@ -32,10 +32,10 @@ export function useNFTMint() {
     if (!mintPrice) return;
 
     writeContract({
-      address: SOCIAL_SCORE_HUB_NFT_ADDRESS,
+      address: contractAddress,
       abi: SOCIAL_SCORE_HUB_NFT_ABI,
       functionName: "mint",
-      chainId: base.id,
+      chainId,
       value: mintPrice,
     });
   };

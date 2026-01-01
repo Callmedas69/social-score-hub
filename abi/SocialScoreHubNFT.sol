@@ -90,13 +90,14 @@ contract SocialScoreHubNFT is
 
         string memory svg = _generateSVG(colors, darkColors);
         string memory attributes = _generateAttributes(colors);
+        string memory svgBase64 = Base64.encode(bytes(svg));
 
         string memory json = string(
             abi.encodePacked(
                 '{"name":"SSH NFT #',
                 tokenId.toString(),
-                '","description":"Social Score Hub DAO Token","image_data":"',
-                svg,
+                '","description":"Social Score Hub DAO Token","image":"data:image/svg+xml;base64,',
+                svgBase64,
                 '","attributes":',
                 attributes,
                 "}"
@@ -329,10 +330,11 @@ contract SocialScoreHubNFT is
 
     function contractURI() public pure returns (string memory) {
         string memory svg = _collectionImage();
+        string memory svgBase64 = Base64.encode(bytes(svg));
         string memory json = string(
             abi.encodePacked(
-                '{"name":"Social Score Hub","description":"Social Score Hub DAO Token","image_data":"',
-                svg,
+                '{"name":"Social Score Hub","description":"Social Score Hub DAO Token","image":"data:image/svg+xml;base64,',
+                svgBase64,
                 '"}'
             )
         );

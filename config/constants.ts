@@ -11,6 +11,24 @@ export const CHECKIN_ADDRESSES: Record<SupportedChainId, `0x${string}`> = {
   [celo.id]: HELLOONCHAIN_ADDRESS_CELO,
 };
 
+// NFT contract addresses per chain
+export const NFT_ADDRESSES: Record<SupportedChainId, `0x${string}`> = {
+  [base.id]: "0x058AEfe4CBB6049eD9dbaD62E9F73F6A3300C1A8",
+  [celo.id]: "0x9F46DD5E1c1258Ca98b56cCE13A8D33b201D4622",
+};
+
+// Block explorer URLs per chain
+export const BLOCK_EXPLORER_URLS: Record<SupportedChainId, string> = {
+  [base.id]: "https://basescan.org",
+  [celo.id]: "https://celoscan.io",
+};
+
+// Native currency symbol per chain
+export const NATIVE_CURRENCY: Record<SupportedChainId, string> = {
+  [base.id]: "ETH",
+  [celo.id]: "CELO",
+};
+
 // Chain display configuration (brand colors from .docs/brand_color.md)
 export const CHAIN_CONFIG: Record<SupportedChainId, {
   name: string;

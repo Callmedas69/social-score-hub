@@ -7,6 +7,7 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import { useNFTMint } from "@/hooks/useNFTMint";
 import { formatTimeRemaining, getUserFriendlyError } from "@/lib/utils";
 import { sdk } from "@farcaster/miniapp-sdk";
+import { CHAIN_CONFIG, SupportedChainId } from "@/config/constants";
 
 // Animated checkmark SVG component
 const AnimatedCheckmark = memo(function AnimatedCheckmark({
@@ -59,6 +60,7 @@ interface NFTMintButtonProps {
   onSuccess?: () => void | Promise<void>;
   onCooldownComplete?: () => void;
   isLoading?: boolean;
+  chainId?: SupportedChainId;
 }
 
 export function NFTMintButton({
@@ -68,15 +70,17 @@ export function NFTMintButton({
   onSuccess,
   onCooldownComplete,
   isLoading = false,
+  chainId = base.id,
 }: NFTMintButtonProps) {
   const { chain } = useAccount();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
   const { mint, isPending, isConfirming, isSuccess, error, reset } =
-    useNFTMint();
+    useNFTMint(chainId);
 
   const [remaining, setRemaining] = useState(Number(timeRemaining));
   const [justMinted, setJustMinted] = useState(false);
-  const isCorrectChain = chain?.id === base.id;
+  const isCorrectChain = chain?.id === chainId;
+  const chainConfig = CHAIN_CONFIG[chainId];
 
   // Refs for callbacks
   const onSuccessRef = useRef(onSuccess);
@@ -117,6 +121,8 @@ export function NFTMintButton({
   useEffect(() => {
     if (isSuccess) {
       setJustMinted(true);
+      // Set countdown immediately using known cooldown duration (12 hours)
+      setRemaining(43200);
 
       // Trigger haptic feedback for Farcaster mini app
       try {
@@ -142,14 +148,13 @@ export function NFTMintButton({
 
   const handleClick = (action: "switch" | "mint") => {
     if (action === "switch") {
-      switchChain?.({ chainId: base.id });
+      switchChain?.({ chainId });
     } else {
       mint();
     }
   };
 
-
-  const accentColor = "#0000FF"; // Base blue (matches CHAIN_CONFIG)
+  const accentColor = chainConfig.color;
 
   // Loading state
   if (isLoading) {
@@ -196,7 +201,7 @@ export function NFTMintButton({
             backgroundColor: `${accentColor}15`,
           }}
         >
-          {isSwitching ? "Switching..." : "Switch to Base"}
+          {isSwitching ? "Switching..." : `Switch to ${chainConfig.name}`}
         </button>
         {error && (
           <p className="text-red-500 text-xs mt-2 text-center">

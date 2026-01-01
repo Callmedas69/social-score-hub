@@ -1,27 +1,26 @@
 import { useReadContract, useAccount } from "wagmi";
 import { base } from "wagmi/chains";
-import {
-  SOCIAL_SCORE_HUB_NFT_ADDRESS,
-  SOCIAL_SCORE_HUB_NFT_ABI,
-} from "@/abi/SocialScoreHubNFT";
+import { SOCIAL_SCORE_HUB_NFT_ABI } from "@/abi/SocialScoreHubNFT";
+import { NFT_ADDRESSES, SupportedChainId } from "@/config/constants";
 
-export function useNFTStatus() {
+export function useNFTStatus(chainId: SupportedChainId = base.id) {
   const { address, isConnected } = useAccount();
+  const contractAddress = NFT_ADDRESSES[chainId];
 
   // Read mint price
   const { data: mintPrice, isLoading: isLoadingPrice } = useReadContract({
-    address: SOCIAL_SCORE_HUB_NFT_ADDRESS,
+    address: contractAddress,
     abi: SOCIAL_SCORE_HUB_NFT_ABI,
     functionName: "MINT_PRICE",
-    chainId: base.id,
+    chainId,
   });
 
   // Read cooldown duration
   const { data: cooldownDuration } = useReadContract({
-    address: SOCIAL_SCORE_HUB_NFT_ADDRESS,
+    address: contractAddress,
     abi: SOCIAL_SCORE_HUB_NFT_ABI,
     functionName: "MINT_COOLDOWN",
-    chainId: base.id,
+    chainId,
   });
 
   // Read user's last mint timestamp
@@ -30,13 +29,14 @@ export function useNFTStatus() {
     isLoading: isLoadingTimestamp,
     refetch,
   } = useReadContract({
-    address: SOCIAL_SCORE_HUB_NFT_ADDRESS,
+    address: contractAddress,
     abi: SOCIAL_SCORE_HUB_NFT_ABI,
     functionName: "lastMintTimestamp",
     args: address ? [address] : undefined,
-    chainId: base.id,
+    chainId,
     query: {
       enabled: isConnected && !!address,
+      staleTime: 0, // Always fetch fresh data for accurate cooldown
     },
   });
 

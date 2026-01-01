@@ -3,6 +3,7 @@
 import { useState, useCallback, memo } from "react";
 import { Share2, Check, Sparkles } from "lucide-react";
 import { useAccount } from "wagmi";
+import { base } from "wagmi/chains";
 import { sdk } from "@farcaster/miniapp-sdk";
 import {
   Dialog,
@@ -11,26 +12,38 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DOMAIN_URL } from "@/config/constants";
-import { SOCIAL_SCORE_HUB_NFT_ADDRESS } from "@/abi/SocialScoreHubNFT";
+import {
+  DOMAIN_URL,
+  NFT_ADDRESSES,
+  BLOCK_EXPLORER_URLS,
+  CHAIN_CONFIG,
+  SupportedChainId,
+} from "@/config/constants";
 
 interface NFTSuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
+  chainId?: SupportedChainId;
 }
 
 export const NFTSuccessModal = memo(function NFTSuccessModal({
   isOpen,
   onClose,
+  chainId = base.id,
 }: NFTSuccessModalProps) {
   const { address } = useAccount();
   const [isSharing, setIsSharing] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const contractAddress = NFT_ADDRESSES[chainId];
+  const explorerUrl = BLOCK_EXPLORER_URLS[chainId];
+  const chainConfig = CHAIN_CONFIG[chainId];
+  const explorerName = chainId === base.id ? "BaseScan" : "CeloScan";
+
   const handleShare = useCallback(async () => {
     setIsSharing(true);
 
-    const shareText = "Just minted my Social Score Hub NFT on Base!";
+    const shareText = `Just minted my Social Score Hub NFT on ${chainConfig.name}!`;
     const sharePageUrl = address
       ? `${DOMAIN_URL}/share/checkin/${address}`
       : `${DOMAIN_URL}/checkin`;
@@ -57,9 +70,9 @@ export const NFTSuccessModal = memo(function NFTSuccessModal({
     }
 
     setIsSharing(false);
-  }, [address]);
+  }, [address, chainConfig.name]);
 
-  const accentColor = "#0000FF"; // Base blue (matches CHAIN_CONFIG)
+  const accentColor = chainConfig.color;
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -81,12 +94,12 @@ export const NFTSuccessModal = memo(function NFTSuccessModal({
             Your Social Score Hub NFT has been minted successfully!
           </p>
           <a
-            href={`https://basescan.org/address/${SOCIAL_SCORE_HUB_NFT_ADDRESS}`}
+            href={`${explorerUrl}/address/${contractAddress}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500 text-xs hover:underline mt-2 inline-block"
           >
-            View on BaseScan
+            View on {explorerName}
           </a>
         </div>
 

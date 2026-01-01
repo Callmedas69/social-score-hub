@@ -14,7 +14,7 @@ export function useCanCheckIn(chainId: SupportedChainId) {
     chainId,
     query: {
       enabled: isConnected && !!address,
-      staleTime: 24 * 60 * 60 * 1000, // 24 hours - matches contract check-in period
+      staleTime: 0, // Always fetch fresh data for accurate cooldown
     },
   });
 

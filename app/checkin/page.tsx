@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
+import { celo } from "wagmi/chains";
 import sdk from "@farcaster/miniapp-sdk";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -134,8 +135,9 @@ export default function CheckInPage() {
               <BaseCheckInCard />
               <NFTMintCard />
             </TabsContent>
-            <TabsContent value="celo">
+            <TabsContent value="celo" className="space-y-3">
               <CeloCheckInCard />
+              <NFTMintCard chainId={celo.id} />
             </TabsContent>
           </Tabs>
         </div>
