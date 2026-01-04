@@ -3,7 +3,7 @@
 import { memo, useRef, useMemo } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { formatTimeRemaining, getUserFriendlyError } from "@/lib/utils";
-import type { CheckInPhase } from "@/hooks/useCheckInController";
+import type { CheckInPhase } from "./CheckInButton";
 
 // AnimatedCheckmark (unchanged, already good)
 const AnimatedCheckmark = memo(function AnimatedCheckmark({
@@ -83,7 +83,17 @@ export const CheckInButtonView = memo(function CheckInButtonView({
   // Pure render based on phase
   switch (phase) {
     case "loading":
-      return <div className="h-11 bg-gray-100 animate-pulse" />;
+      return <div className="h-11 bg-gray-100 animate-pulse rounded" />;
+
+    case "disconnected":
+      return (
+        <button
+          disabled
+          className="w-full h-11 bg-gray-100 text-gray-400 font-display cursor-not-allowed"
+        >
+          Connect wallet
+        </button>
+      );
 
     case "success":
       return (
@@ -104,7 +114,7 @@ export const CheckInButtonView = memo(function CheckInButtonView({
           className={`w-full h-11 ${textColor} opacity-70 font-display`}
           style={bgStyle}
         >
-          Confirm...
+          Waiting for signature...
         </button>
       );
 
@@ -115,7 +125,7 @@ export const CheckInButtonView = memo(function CheckInButtonView({
           className={`w-full h-11 ${textColor} opacity-70 font-display`}
           style={bgStyle}
         >
-          Processing...
+          Confirming on-chain...
         </button>
       );
 
@@ -157,12 +167,17 @@ export const CheckInButtonView = memo(function CheckInButtonView({
 
     case "cooldown":
       return (
-        <button
-          disabled
-          className="w-full h-11 bg-gray-100 text-gray-400 font-display cursor-not-allowed"
-        >
-          {formatTimeRemaining(secondsRemaining)}
-        </button>
+        <div className="w-full">
+          <p className="text-xs text-gray-500 text-center mb-1">
+            Checked in today ✓
+          </p>
+          <button
+            disabled
+            className="w-full h-11 bg-gray-100 text-gray-400 font-display cursor-not-allowed"
+          >
+            {formatTimeRemaining(secondsRemaining)}
+          </button>
+        </div>
       );
   }
 });

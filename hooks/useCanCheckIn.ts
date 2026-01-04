@@ -14,7 +14,8 @@ export function useCanCheckIn(chainId: SupportedChainId) {
     chainId,
     query: {
       enabled: isConnected && !!address,
-      staleTime: 0, // Always fetch fresh data for accurate cooldown
+      staleTime: 0,
+      gcTime: 0, // Don't persist to storage - always fetch fresh for cooldown
     },
   });
 
