@@ -88,7 +88,7 @@ async function fetchEthosScore(
 }
 
 export function useSocialScores() {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const { ssaIndex, hasMinted, isLoading: ssaLoading, error: ssaError } = useSSAScore(address);
 
   // Fetch Talent score
@@ -99,7 +99,7 @@ export function useSocialScores() {
   } = useQuery({
     queryKey: ["talent-score", address],
     queryFn: () => fetchTalentScore(address!),
-    enabled: isConnected && !!address,
+    enabled: !!address,
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
@@ -111,7 +111,7 @@ export function useSocialScores() {
   } = useQuery({
     queryKey: ["neynar-score", address],
     queryFn: () => fetchNeynarScore(address!),
-    enabled: isConnected && !!address,
+    enabled: !!address,
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
@@ -123,7 +123,7 @@ export function useSocialScores() {
   } = useQuery({
     queryKey: ["gitcoin-score", address],
     queryFn: () => fetchGitcoinScore(address!),
-    enabled: isConnected && !!address,
+    enabled: !!address,
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
@@ -148,7 +148,7 @@ export function useSocialScores() {
   } = useQuery({
     queryKey: ["ethos-score", address],
     queryFn: () => fetchEthosScore(address!),
-    enabled: isConnected && !!address,
+    enabled: !!address,
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 

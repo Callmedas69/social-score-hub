@@ -3,7 +3,7 @@ import { CHECKIN_ADDRESSES, CONTRACT_ABI, type SupportedChainId } from "@/config
 import type { CheckInStatus } from "@/types";
 
 export function useCanCheckIn(chainId: SupportedChainId) {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const contractAddress = CHECKIN_ADDRESSES[chainId];
 
   const { data, isLoading, error, refetch } = useReadContract({
@@ -13,9 +13,7 @@ export function useCanCheckIn(chainId: SupportedChainId) {
     args: address ? [address] : undefined,
     chainId,
     query: {
-      enabled: isConnected && !!address,
-      staleTime: 0,
-      gcTime: 0, // Don't persist to storage - always fetch fresh for cooldown
+      staleTime: 0, // Always fetch fresh for cooldown
     },
   });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useCheckIn } from "@/hooks/useCheckIn";
 import { sdk } from "@farcaster/miniapp-sdk";
@@ -68,8 +68,8 @@ export function CheckInButton({
   onSuccessRef.current = onSuccess;
   onCooldownCompleteRef.current = onCooldownComplete;
 
-  // Derive phase from state (deterministic)
-  const phase: CheckInPhase = (() => {
+  // Derive phase from state (deterministic, memoized)
+  const phase: CheckInPhase = useMemo(() => {
     if (isLoading) return "loading";
     if (isSuccess) return "success";
     if (isPending) return "pending";
@@ -78,7 +78,7 @@ export function CheckInButton({
     if (!isCorrectChain) return "wrong-chain";
     if (canCheckIn) return "ready";
     return "cooldown";
-  })();
+  }, [isLoading, isSuccess, isPending, isConfirming, isConnected, isCorrectChain, canCheckIn]);
 
   // Countdown effect
   useEffect(() => {

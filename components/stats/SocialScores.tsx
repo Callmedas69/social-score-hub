@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { useSocialScores } from "@/hooks/useSocialScores";
 import { ScoreCard } from "./ScoreCard";
 import {
@@ -22,7 +23,7 @@ function formatQuotientTier(
   return rank ? `${tier} • Rank #${rank}` : tier;
 }
 
-export function SocialScores() {
+export const SocialScores = memo(function SocialScores() {
   const { talent, neynar, gitcoin, quotient, ethos, ssa } = useSocialScores();
 
   return (
@@ -147,4 +148,4 @@ export function SocialScores() {
       </div>
     </div>
   );
-}
+});

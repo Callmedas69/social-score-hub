@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useNFTMint } from "./useNFTMint";
 import { sdk } from "@farcaster/miniapp-sdk";
@@ -70,8 +70,8 @@ export function useNFTMintController({
   onSuccessRef.current = onSuccess;
   onCooldownCompleteRef.current = onCooldownComplete;
 
-  // Derive phase from state (deterministic)
-  const phase: NFTMintPhase = (() => {
+  // Derive phase from state (deterministic, memoized)
+  const phase: NFTMintPhase = useMemo(() => {
     if (isLoading) return "loading";
     if (isSuccess) return "success";
     if (isPending) return "pending";
@@ -79,7 +79,7 @@ export function useNFTMintController({
     if (!isCorrectChain) return "wrong-chain";
     if (canMint) return "ready";
     return "cooldown";
-  })();
+  }, [isLoading, isSuccess, isPending, isConfirming, isCorrectChain, canMint]);
 
   // Countdown effect - depends on props, not state
   useEffect(() => {

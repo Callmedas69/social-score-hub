@@ -129,12 +129,12 @@ function calculateSummary(
 }
 
 export function useOnchainActivity() {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["onchain-activity", address],
     queryFn: () => fetchActivity(address!),
-    enabled: isConnected && !!address,
+    enabled: !!address,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 

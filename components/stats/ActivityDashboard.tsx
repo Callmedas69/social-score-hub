@@ -1,11 +1,11 @@
 "use client";
 
+import { memo, useState, useEffect } from "react";
 import { useOnchainActivity } from "@/hooks/useOnchainActivity";
 import { ActivityHeatmap } from "./ActivityHeatmap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Activity, ExternalLink } from "lucide-react";
-import { useState, useEffect } from "react";
 
 function useCountUp(target: number, duration = 1000) {
   const [value, setValue] = useState(0);
@@ -30,7 +30,7 @@ function useCountUp(target: number, duration = 1000) {
   return value;
 }
 
-function StatCard({
+const StatCard = memo(function StatCard({
   label,
   value,
   subValue,
@@ -56,7 +56,7 @@ function StatCard({
       )}
     </div>
   );
-}
+});
 
 function LoadingSkeleton() {
   return (
@@ -106,7 +106,7 @@ function formatActivityPeriod(totalDays: number): string {
   return parts.join(" ");
 }
 
-export function ActivityDashboard() {
+export const ActivityDashboard = memo(function ActivityDashboard() {
   const { dailyCounts, summary, isLoading, error } = useOnchainActivity();
 
   if (isLoading) {
@@ -194,4 +194,4 @@ export function ActivityDashboard() {
       </Card>
     </div>
   );
-}
+});

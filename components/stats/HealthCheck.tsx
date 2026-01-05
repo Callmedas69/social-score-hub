@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useState, useEffect } from "react";
 import { useWalletSecurity } from "@/hooks/useWalletSecurity";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,7 +16,6 @@ import {
   ChevronDown,
   AlertCircle,
 } from "lucide-react";
-import { useState, useEffect } from "react";
 
 function LoadingSkeleton() {
   return (
@@ -42,7 +42,7 @@ function getScoreTextColor(score: number) {
   return "text-red-600";
 }
 
-function RadialProgress({ score }: { score: number }) {
+const RadialProgress = memo(function RadialProgress({ score }: { score: number }) {
   const [displayScore, setDisplayScore] = useState(0);
   const radius = 36;
   const circumference = 2 * Math.PI * radius;
@@ -96,9 +96,9 @@ function RadialProgress({ score }: { score: number }) {
       </div>
     </div>
   );
-}
+});
 
-export function HealthCheck() {
+export const HealthCheck = memo(function HealthCheck() {
   const { security, score, flags, isLoading, error } = useWalletSecurity();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -196,4 +196,4 @@ export function HealthCheck() {
       </CardContent>
     </Card>
   );
-}
+});

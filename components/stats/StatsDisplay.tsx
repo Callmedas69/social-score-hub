@@ -1,21 +1,22 @@
 "use client";
 
+import { memo } from "react";
 import { useUserStats } from "@/hooks/useUserStats";
 import { formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SUPPORTED_CHAINS, CHAIN_CONFIG, type SupportedChainId } from "@/config/constants";
 
-function StatItem({ label, value }: { label: string; value: string | number }) {
+const StatItem = memo(function StatItem({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="flex justify-between items-center py-2 border-b last:border-b-0">
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="font-semibold">{value}</span>
     </div>
   );
-}
+});
 
-function ChainStatsCard({ chainId }: { chainId: SupportedChainId }) {
+const ChainStatsCard = memo(function ChainStatsCard({ chainId }: { chainId: SupportedChainId }) {
   const config = CHAIN_CONFIG[chainId];
   const { formatted, isLoading } = useUserStats(chainId);
 
@@ -57,9 +58,9 @@ function ChainStatsCard({ chainId }: { chainId: SupportedChainId }) {
       </CardContent>
     </Card>
   );
-}
+});
 
-export function StatsDisplay() {
+export const StatsDisplay = memo(function StatsDisplay() {
   return (
     <div className="space-y-4">
       {SUPPORTED_CHAINS.map((chain) => (
@@ -67,4 +68,4 @@ export function StatsDisplay() {
       ))}
     </div>
   );
-}
+});

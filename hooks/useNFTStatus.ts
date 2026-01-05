@@ -4,7 +4,7 @@ import { SOCIAL_SCORE_HUB_NFT_ABI } from "@/abi/SocialScoreHubNFT";
 import { NFT_ADDRESSES, SupportedChainId } from "@/config/constants";
 
 export function useNFTStatus(chainId: SupportedChainId = base.id) {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const contractAddress = NFT_ADDRESSES[chainId];
 
   // Read mint price
@@ -35,7 +35,6 @@ export function useNFTStatus(chainId: SupportedChainId = base.id) {
     args: address ? [address] : undefined,
     chainId,
     query: {
-      enabled: isConnected && !!address,
       staleTime: 0, // Always fetch fresh data for accurate cooldown
     },
   });

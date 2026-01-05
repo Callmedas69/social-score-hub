@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { useAccount } from "wagmi";
 import { useSocialScores } from "@/hooks/useSocialScores";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,7 +27,7 @@ function LoadingSkeleton() {
   );
 }
 
-export function UserCard() {
+export const UserCard = memo(function UserCard() {
   const { address } = useAccount();
   const { neynar } = useSocialScores();
 
@@ -113,4 +114,4 @@ export function UserCard() {
       </CardContent>
     </Card>
   );
-}
+});

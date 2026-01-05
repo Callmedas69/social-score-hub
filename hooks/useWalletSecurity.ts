@@ -26,12 +26,12 @@ async function fetchSecurityData(address: string): Promise<SecurityData | null> 
 }
 
 export function useWalletSecurity() {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["wallet-security", address],
     queryFn: () => fetchSecurityData(address!),
-    enabled: isConnected && !!address,
+    enabled: !!address,
     staleTime: 60 * 60 * 1000, // 1 hour cache
   });
 
