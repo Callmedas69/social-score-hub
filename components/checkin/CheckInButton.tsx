@@ -80,7 +80,7 @@ export function CheckInButton({
     return "cooldown";
   }, [isLoading, isSuccess, isPending, isConfirming, isConnected, isCorrectChain, canCheckIn]);
 
-  // Countdown effect
+  // Countdown effect - visibility-aware (pauses when tab hidden)
   useEffect(() => {
     if (canCheckIn || timeRemaining <= 0n) {
       setSecondsRemaining(0);
@@ -93,17 +93,49 @@ export function CheckInButton({
     cooldownTargetRef.current = targetTime;
     setSecondsRemaining(initialSeconds);
 
-    const interval = setInterval(() => {
-      const left = Math.max(0, Math.ceil((targetTime - Date.now()) / 1000));
-      setSecondsRemaining(left);
+    let interval: ReturnType<typeof setInterval> | null = null;
 
+    const tick = () => {
+      const left = Math.max(0, Math.ceil((cooldownTargetRef.current! - Date.now()) / 1000));
+      setSecondsRemaining(left);
       if (left <= 0) {
-        clearInterval(interval);
+        if (interval) clearInterval(interval);
+        interval = null;
         onCooldownCompleteRef.current?.();
       }
-    }, 1000);
+    };
 
-    return () => clearInterval(interval);
+    const startTimer = () => {
+      if (interval) clearInterval(interval);
+      tick(); // Immediate update
+      interval = setInterval(tick, 1000);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (interval) clearInterval(interval);
+        interval = null;
+      } else {
+        // Tab became visible - recalculate and restart
+        const left = Math.max(0, Math.ceil((cooldownTargetRef.current! - Date.now()) / 1000));
+        setSecondsRemaining(left);
+        if (left > 0) {
+          startTimer();
+        } else {
+          onCooldownCompleteRef.current?.();
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    if (!document.hidden) {
+      startTimer();
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [canCheckIn, timeRemaining]);
 
   // Success effect
