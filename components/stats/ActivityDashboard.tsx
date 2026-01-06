@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useRef } from "react";
 import { useOnchainActivity } from "@/hooks/useOnchainActivity";
 import { ActivityHeatmap } from "./ActivityHeatmap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Activity, ExternalLink } from "lucide-react";
 
 function useCountUp(target: number, duration = 1000) {
   const [value, setValue] = useState(0);
+  const frameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (target === 0) {
@@ -22,9 +23,17 @@ function useCountUp(target: number, duration = 1000) {
       // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setValue(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(animate);
+      if (progress < 1) {
+        frameRef.current = requestAnimationFrame(animate);
+      }
     };
-    requestAnimationFrame(animate);
+    frameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
   }, [target, duration]);
 
   return value;

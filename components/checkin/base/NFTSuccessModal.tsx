@@ -43,7 +43,7 @@ export const NFTSuccessModal = memo(function NFTSuccessModal({
   const handleShare = useCallback(async () => {
     setIsSharing(true);
 
-    const shareText = `Just minted my Social Score Hub NFT on ${chainConfig.name}!`;
+    const shareText = `Just grabbed my Social Score Hub NFT on ${chainConfig.name}!`;
     const sharePageUrl = address
       ? `${DOMAIN_URL}/share/checkin/${address}`
       : `${DOMAIN_URL}/checkin`;
@@ -84,14 +84,14 @@ export const NFTSuccessModal = memo(function NFTSuccessModal({
         <DialogHeader className="text-center">
           <DialogTitle className="text-2xl font-bold tracking-tight flex items-center justify-center gap-2">
             <Sparkles className="w-6 h-6 text-yellow-500" />
-            NFT Minted!
+            It's yours!
             <Sparkles className="w-6 h-6 text-yellow-500" />
           </DialogTitle>
         </DialogHeader>
 
         <div className="py-4 text-center">
           <p className="text-gray-600 text-sm">
-            Your Social Score Hub NFT has been minted successfully!
+            Your NFT is locked and loaded!
           </p>
           <a
             href={`${explorerUrl}/address/${contractAddress}`}
@@ -128,7 +128,7 @@ export const NFTSuccessModal = memo(function NFTSuccessModal({
             className="flex-1 text-white rounded-none"
             style={{ backgroundColor: accentColor }}
           >
-            Done
+            Nice!
           </Button>
         </div>
       </DialogContent>

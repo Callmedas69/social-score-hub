@@ -1,14 +1,12 @@
+/**
+ * Talent Protocol Score API Route
+ *
+ * Transport layer only - validates input and delegates to use case.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { isValidAddress } from "@/lib/validation";
-
-const TALENT_SCORES_URL = "https://api.talentprotocol.com/scores";
-
-interface TalentScore {
-  slug: string;
-  points: number;
-  rank_position: number | null;
-  last_calculated_at: string | null;
-}
+import { getTalentScore } from "@/lib/useCases/scores";
 
 export async function GET(
   request: NextRequest,
@@ -16,12 +14,13 @@ export async function GET(
 ) {
   const { address } = await params;
 
+  // Input validation
   if (!isValidAddress(address)) {
     return NextResponse.json({ error: "Invalid address" }, { status: 400 });
   }
 
-  const apiKey = process.env.TALENT_PROTOCOL_API_KEY;
-  if (!apiKey) {
+  // Check for required API key
+  if (!process.env.TALENT_PROTOCOL_API_KEY) {
     return NextResponse.json(
       { error: "Talent Protocol API key not configured" },
       { status: 500 }
@@ -29,38 +28,10 @@ export async function GET(
   }
 
   try {
-    const response = await fetch(
-      `${TALENT_SCORES_URL}?id=${address.toLowerCase()}`,
-      {
-        headers: {
-          "X-API-KEY": apiKey,
-        },
-        next: { revalidate: 86400 }, // 24 hour cache
-      }
-    );
+    // Delegate to use case
+    const passport = await getTalentScore(address);
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        return NextResponse.json({ passport: null }, { status: 200 });
-      }
-      throw new Error(`Talent API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const scores: TalentScore[] = data.scores || [];
-
-    // Extract builder and creator scores from the array
-    const builderScore = scores.find((s) => s.slug === "builder_score");
-    const creatorScore = scores.find((s) => s.slug === "creator_score");
-
-    return NextResponse.json({
-      passport: {
-        builder_score: builderScore?.points ?? null,
-        builder_rank: builderScore?.rank_position ?? null,
-        creator_score: creatorScore?.points ?? null,
-        creator_rank: creatorScore?.rank_position ?? null,
-      },
-    });
+    return NextResponse.json({ passport });
   } catch (error) {
     console.error("Talent Protocol API error:", error);
     return NextResponse.json(
@@ -69,3 +40,6 @@ export async function GET(
     );
   }
 }
+
+// Cache for 24 hours
+export const revalidate = 86400;

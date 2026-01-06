@@ -87,9 +87,9 @@ export default function CheckInPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
         <div className="text-center space-y-3">
-          <h2 className="text-xl font-bold text-gray-900">Connect Your Wallet</h2>
+          <h2 className="text-xl font-bold text-gray-900">Link Your Wallet</h2>
           <p className="text-gray-500 text-sm max-w-xs">
-            Connect your wallet to start your daily check-in streak
+            Link your wallet to start stacking those check-ins
           </p>
         </div>
         <Navigation />

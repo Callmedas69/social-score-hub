@@ -68,7 +68,7 @@ export const RewardsPreview = memo(function RewardsPreview({ chainId }: RewardsP
                 : "text-gray-500"
             }`}
           >
-            AutoClaim Rewards
+            Auto Rewards
           </span>
           {hasRewards && !isCapReached && (
             <span className="text-[10px] text-green-600 bg-green-100 px-1.5 py-0.5">
@@ -79,7 +79,7 @@ export const RewardsPreview = memo(function RewardsPreview({ chainId }: RewardsP
         <div className="flex items-center gap-2">
           {isCapReached ? (
             <span className="text-[10px] text-red-600 italic">
-              Daily limit reached
+              Hit today's cap!
             </span>
           ) : remainingDisplay ? (
             <span className="text-[10px] text-gray-500">{remainingDisplay}</span>
@@ -98,7 +98,7 @@ export const RewardsPreview = memo(function RewardsPreview({ chainId }: RewardsP
       <CollapsibleContent className="mt-2">
         {isCapReached ? (
           <p className="text-[10px] text-red-600 italic px-1">
-            Daily reward limit has been reached. Try again tomorrow!
+            You maxed out today's rewards - see ya tomorrow!
           </p>
         ) : hasRewards ? (
           <div className="flex flex-wrap gap-2 px-1">
@@ -123,7 +123,7 @@ export const RewardsPreview = memo(function RewardsPreview({ chainId }: RewardsP
           </div>
         ) : (
           <p className="text-[8px] italic text-gray-500 px-1">
-            No rewards available for next check-in
+            No rewards this round - check back!
           </p>
         )}
       </CollapsibleContent>

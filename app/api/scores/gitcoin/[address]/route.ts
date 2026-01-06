@@ -1,8 +1,12 @@
+/**
+ * Gitcoin Passport Score API Route
+ *
+ * Transport layer only - validates input and delegates to use case.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { isValidAddress } from "@/lib/validation";
-
-const GITCOIN_API_URL = "https://api.passport.xyz/v2/stamps";
-const SCORER_ID = process.env.GITCOIN_PASSPORT_SCORER_ID || "11874";
+import { getGitcoinScore } from "@/lib/useCases/scores";
 
 export async function GET(
   request: NextRequest,
@@ -10,12 +14,13 @@ export async function GET(
 ) {
   const { address } = await params;
 
+  // Input validation
   if (!isValidAddress(address)) {
     return NextResponse.json({ error: "Invalid address" }, { status: 400 });
   }
 
-  const apiKey = process.env.GITCOIN_PASSPORT_API_KEY;
-  if (!apiKey) {
+  // Check for required API key
+  if (!process.env.GITCOIN_PASSPORT_API_KEY) {
     return NextResponse.json(
       { error: "Gitcoin Passport API key not configured" },
       { status: 500 }
@@ -23,32 +28,10 @@ export async function GET(
   }
 
   try {
-    const response = await fetch(
-      `${GITCOIN_API_URL}/${SCORER_ID}/score/${address}`,
-      {
-        headers: {
-          "X-API-KEY": apiKey,
-        },
-        next: { revalidate: 86400 }, // 24 hour cache
-      }
-    );
+    // Delegate to use case
+    const passport = await getGitcoinScore(address);
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        return NextResponse.json({ passport: null }, { status: 200 });
-      }
-      throw new Error(`Gitcoin API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    return NextResponse.json({
-      passport: {
-        score: data.score ? parseFloat(data.score) : null,
-        passing_score: data.passing_score ?? false,
-        threshold: 20,
-      },
-    });
+    return NextResponse.json({ passport });
   } catch (error) {
     console.error("Gitcoin Passport API error:", error);
     return NextResponse.json(
@@ -57,3 +40,6 @@ export async function GET(
     );
   }
 }
+
+// Cache for 24 hours
+export const revalidate = 86400;

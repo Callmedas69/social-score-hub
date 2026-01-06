@@ -130,7 +130,6 @@ export function useNFTMintController({
       } finally {
         if (!cancelled) {
           reset();
-          handledSuccessRef.current = false;
         }
       }
     };
@@ -139,6 +138,8 @@ export function useNFTMintController({
 
     return () => {
       cancelled = true;
+      // Reset guard only on cleanup (when isSuccess changes or unmount)
+      handledSuccessRef.current = false;
     };
   }, [isSuccess, reset]);
 

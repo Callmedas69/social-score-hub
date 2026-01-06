@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useRef, useMemo } from "react";
+import { memo, useRef, useMemo, useCallback } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { formatTimeRemaining, getUserFriendlyError } from "@/lib/utils";
 import type { NFTMintPhase } from "@/hooks/useNFTMintController";
@@ -52,6 +52,7 @@ interface NFTMintButtonViewProps {
   secondsRemaining: number;
   chainName: string;
   accentColor: string;
+  textColor?: string;
   error: Error | null;
   mintPrice: bigint | undefined;
   onMint: () => void;
@@ -63,11 +64,14 @@ export const NFTMintButtonView = memo(function NFTMintButtonView({
   secondsRemaining,
   chainName,
   accentColor,
+  textColor = "text-white",
   error,
   mintPrice,
   onMint,
   onSwitchChain,
 }: NFTMintButtonViewProps) {
+  const clickGuardRef = useRef(false);
+
   const bgStyle = useMemo(
     () => ({ backgroundColor: accentColor }),
     [accentColor]
@@ -80,6 +84,22 @@ export const NFTMintButtonView = memo(function NFTMintButtonView({
     [accentColor]
   );
 
+  // Debounced click handlers to prevent double-click
+  const handleMint = useCallback(() => {
+    if (clickGuardRef.current) return;
+    clickGuardRef.current = true;
+    onMint();
+    // Reset guard after a short delay (phase change should handle actual disable)
+    setTimeout(() => { clickGuardRef.current = false; }, 1000);
+  }, [onMint]);
+
+  const handleSwitchChain = useCallback(() => {
+    if (clickGuardRef.current) return;
+    clickGuardRef.current = true;
+    onSwitchChain();
+    setTimeout(() => { clickGuardRef.current = false; }, 1000);
+  }, [onSwitchChain]);
+
   // Pure render based on phase
   switch (phase) {
     case "loading":
@@ -89,11 +109,11 @@ export const NFTMintButtonView = memo(function NFTMintButtonView({
       return (
         <button
           disabled
-          className="w-full h-11 text-white font-display flex items-center justify-center"
+          className={`w-full h-11 ${textColor} font-display flex items-center justify-center`}
           style={bgStyle}
         >
-          NFT Minted
-          <AnimatedCheckmark />
+          NFT is yours!
+          <AnimatedCheckmark color={textColor === "text-gray-900" ? "#111827" : "#fff"} />
         </button>
       );
 
@@ -101,10 +121,10 @@ export const NFTMintButtonView = memo(function NFTMintButtonView({
       return (
         <button
           disabled
-          className="w-full h-11 text-white opacity-70 font-display"
+          className={`w-full h-11 ${textColor} opacity-70 font-display`}
           style={bgStyle}
         >
-          Confirm...
+          Confirm in wallet...
         </button>
       );
 
@@ -112,10 +132,10 @@ export const NFTMintButtonView = memo(function NFTMintButtonView({
       return (
         <button
           disabled
-          className="w-full h-11 text-white opacity-70 font-display"
+          className={`w-full h-11 ${textColor} opacity-70 font-display`}
           style={bgStyle}
         >
-          Processing...
+          Almost there...
         </button>
       );
 
@@ -123,11 +143,11 @@ export const NFTMintButtonView = memo(function NFTMintButtonView({
       return (
         <div className="w-full">
           <button
-            onClick={onSwitchChain}
+            onClick={handleSwitchChain}
             className="w-full h-11 text-black border-2 font-display transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
             style={switchStyle}
           >
-            Switch to {chainName}
+            Hop to {chainName}
           </button>
           {error && (
             <p className="text-red-500 text-xs mt-2 text-center">
@@ -141,12 +161,12 @@ export const NFTMintButtonView = memo(function NFTMintButtonView({
       return (
         <div className="w-full">
           <button
-            onClick={onMint}
+            onClick={handleMint}
             disabled={!mintPrice}
-            className="w-full h-11 text-white font-display uppercase transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+            className={`w-full h-11 ${textColor} font-display uppercase transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50`}
             style={bgStyle}
           >
-            Mint DAO Token
+            Mint NFT
           </button>
           {error && (
             <p className="text-red-500 text-xs mt-2 text-center">

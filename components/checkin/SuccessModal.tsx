@@ -50,8 +50,8 @@ export const SuccessModal = memo(function SuccessModal({
     setIsSharing(true);
 
     const streakText = stats?.currentStreak
-      ? `${stats.currentStreak}-day streak 🔥 - I earn USDC rewards`
-      : "First Hello to Base! I earn USDC rewards";
+      ? `${stats.currentStreak} days strong 🔥 Stacking rewards`
+      : "First hello! 👋 Now stacking rewards";
     const shareText = `${streakText} on Hello Onchain!`;
     const sharePageUrl = address
       ? `${DOMAIN_URL}/share/checkin/${address}`
@@ -106,7 +106,7 @@ export const SuccessModal = memo(function SuccessModal({
               )}
             </div>
             <div className="flex items-center justify-center gap-1 mb-1">
-              <div className="text-[10px] text-gray-500">Current Streak</div>
+              <div className="text-[10px] text-gray-500">Streak</div>
               <div><Flame className="w-3 h-3 text-orange-500" /></div>
             </div>
           </div>
@@ -143,7 +143,7 @@ export const SuccessModal = memo(function SuccessModal({
         {rewards.length > 0 && (
           <div className="py-2">
             <p className="text-[10px] text-gray-500 mb-1 text-center italic">
-              Rewards earned
+              You earned
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {rewards.map((reward) => {
@@ -193,7 +193,7 @@ export const SuccessModal = memo(function SuccessModal({
             className="flex-1 text-gray-900 rounded-none"
             style={{ backgroundColor: accentColor }}
           >
-            Done
+            Nice!
           </Button>
         </div>
       </DialogContent>

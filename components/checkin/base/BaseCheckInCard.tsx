@@ -78,7 +78,7 @@ export const BaseCheckInCard = memo(function BaseCheckInCard() {
       {/* Welcome message for new users */}
       {!isLoadingStats && formatted?.totalCheckIns === 0 && (
         <p className="text-xs text-gray-500 text-center mb-2 italic">
-          Start your streak today!
+          Let's get this streak started!
         </p>
       )}
 

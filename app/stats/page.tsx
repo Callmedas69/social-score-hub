@@ -3,8 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { UserCard } from "@/components/stats/UserCard";
-import { HealthCheck } from "@/components/stats/HealthCheck";
+import { ProfileSecurityCard } from "@/components/stats/ProfileSecurityCard";
 import { ActivityDashboard } from "@/components/stats/ActivityDashboard";
 import { Navigation } from "@/components/layout/Navigation";
 
@@ -80,14 +79,9 @@ export default function StatsPage() {
           Wallet Info
         </h1>
 
-        {/* User Card */}
+        {/* Profile & Security Card */}
         <div className="stats-section opacity-0">
-          <UserCard />
-        </div>
-
-        {/* Health Check */}
-        <div className="stats-section opacity-0">
-          <HealthCheck />
+          <ProfileSecurityCard />
         </div>
 
         {/* Activity Dashboard */}

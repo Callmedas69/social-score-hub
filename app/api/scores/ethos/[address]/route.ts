@@ -1,7 +1,12 @@
+/**
+ * Ethos Network Score API Route
+ *
+ * Transport layer only - validates input and delegates to use case.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { isValidAddress } from "@/lib/validation";
-
-const ETHOS_API_URL = "https://api.ethos.network/api/v2/score/address";
+import { getEthosScore } from "@/lib/useCases/scores";
 
 export async function GET(
   request: NextRequest,
@@ -9,41 +14,24 @@ export async function GET(
 ) {
   const { address } = await params;
 
+  // Input validation
   if (!isValidAddress(address)) {
     return NextResponse.json({ error: "Invalid address" }, { status: 400 });
   }
 
   try {
-    const response = await fetch(
-      `${ETHOS_API_URL}?address=${address.toLowerCase()}`,
-      {
-        headers: {
-          "X-Ethos-Client": "HelloOnchain",
-        },
-        next: { revalidate: 86400 }, // 24 hour cache
-      }
-    );
+    // Delegate to use case
+    const ethos = await getEthosScore(address);
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        return NextResponse.json({ ethos: null }, { status: 200 });
-      }
-      throw new Error(`ETHOS API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    return NextResponse.json({
-      ethos: {
-        score: data.score ?? null,
-        level: data.level ?? null,
-      },
-    });
+    return NextResponse.json({ ethos });
   } catch (error) {
-    console.error("ETHOS API error:", error);
+    console.error("Ethos API error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch ETHOS score" },
+      { error: "Failed to fetch Ethos score" },
       { status: 500 }
     );
   }
 }
+
+// Cache for 24 hours
+export const revalidate = 86400;
